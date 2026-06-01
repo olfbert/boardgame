@@ -11,552 +11,148 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-:root {
-  --bg: #0d0d14;
-  --bg2: #13131f;
-  --bg3: #1a1a2a;
-  --bg4: #22223a;
-  --gold: #c9a84c;
-  --gold2: #e8cc7a;
-  --gold-dim: rgba(201,168,76,0.15);
-  --red: #c0392b;
-  --green: #27ae60;
-  --text: #e8e0d0;
-  --text2: #9a9080;
-  --text3: #5a5465;
-  --border: rgba(201,168,76,0.2);
-  --border2: rgba(255,255,255,0.06);
-  --radius: 12px;
-  --radius2: 8px;
-  --shadow: 0 8px 32px rgba(0,0,0,0.6);
-  --shadow2: 0 2px 12px rgba(0,0,0,0.4);
-}
-
-* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-
-html, body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: 'Crimson Text', Georgia, serif;
-  font-size: 16px;
-  min-height: 100vh;
-  overscroll-behavior: none;
-}
-
-/* ── BACKGROUND TEXTURE ── */
-body::before {
-  content: '';
-  position: fixed; inset: 0; z-index: 0;
-  background:
-    radial-gradient(ellipse 80% 60% at 20% 10%, rgba(201,168,76,0.04) 0%, transparent 60%),
-    radial-gradient(ellipse 60% 80% at 80% 80%, rgba(80,40,120,0.06) 0%, transparent 60%),
-    repeating-linear-gradient(0deg, transparent, transparent 40px, rgba(255,255,255,0.01) 40px, rgba(255,255,255,0.01) 41px),
-    repeating-linear-gradient(90deg, transparent, transparent 40px, rgba(255,255,255,0.01) 40px, rgba(255,255,255,0.01) 41px);
-  pointer-events: none;
-}
-
-#app { position: relative; z-index: 1; }
-
-/* ── HEADER ── */
-#header {
-  position: sticky; top: 0; z-index: 100;
-  background: rgba(13,13,20,0.92);
-  backdrop-filter: blur(20px);
-  border-bottom: 1px solid var(--border);
-  padding: 0 20px;
-}
-.header-inner {
-  max-width: 1400px; margin: 0 auto;
-  display: flex; align-items: center; gap: 16px;
-  height: 64px;
-}
-.logo {
-  font-family: 'Cinzel', serif;
-  font-size: 1.3rem; font-weight: 700;
-  color: var(--gold);
-  letter-spacing: 0.08em;
-  white-space: nowrap;
-  display: flex; align-items: center; gap: 10px;
-  text-decoration: none;
-}
-.logo-icon { font-size: 1.5rem; }
-.search-wrap {
-  flex: 1; max-width: 420px;
-  position: relative;
-}
-.search-wrap input {
-  width: 100%;
-  background: var(--bg3);
-  border: 1px solid var(--border);
-  border-radius: 100px;
-  color: var(--text);
-  font-family: 'Crimson Text', serif;
-  font-size: 1rem;
-  padding: 8px 16px 8px 40px;
-  outline: none;
-  transition: border-color .2s;
-}
-.search-wrap input:focus { border-color: var(--gold); }
-.search-icon {
-  position: absolute; left: 13px; top: 50%;
-  transform: translateY(-50%);
-  color: var(--text3); font-size: 0.9rem;
-  pointer-events: none;
-}
-.header-actions { display: flex; gap: 8px; margin-left: auto; }
-.btn-icon {
-  background: var(--bg3); border: 1px solid var(--border2);
-  border-radius: var(--radius2); color: var(--text);
-  width: 40px; height: 40px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 1.1rem; cursor: pointer;
-  transition: all .2s;
-}
-.btn-icon:hover { border-color: var(--gold); color: var(--gold); }
-.btn-add {
-  background: var(--gold); border: none;
-  border-radius: var(--radius2); color: #0d0d14;
-  padding: 0 16px; height: 40px;
-  font-family: 'Cinzel', serif; font-size: 0.75rem; font-weight: 700;
-  letter-spacing: 0.08em; cursor: pointer;
-  transition: all .2s; white-space: nowrap;
-  display: flex; align-items: center; gap: 6px;
-}
-.btn-add:hover { background: var(--gold2); transform: translateY(-1px); }
-
-/* ── STAT BAR ── */
-#statbar {
-  background: var(--bg2);
-  border-bottom: 1px solid var(--border2);
-  padding: 0 20px;
-}
-.statbar-inner {
-  max-width: 1400px; margin: 0 auto;
-  display: flex; gap: 24px; align-items: center;
-  height: 44px; overflow-x: auto;
-  scrollbar-width: none;
-}
-.statbar-inner::-webkit-scrollbar { display: none; }
-.stat-item {
-  display: flex; align-items: center; gap: 6px;
-  white-space: nowrap; font-size: 0.82rem; color: var(--text2);
-}
-.stat-item span { color: var(--gold); font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; }
-.stat-sep { width: 1px; height: 20px; background: var(--border2); flex-shrink: 0; }
-
-/* ── FILTERS ── */
-#filterbar {
-  padding: 16px 20px 0;
-  max-width: 1400px; margin: 0 auto;
-}
-.filter-row {
-  display: flex; gap: 8px; flex-wrap: wrap; align-items: center;
-  margin-bottom: 12px;
-}
-.filter-label {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.7rem; color: var(--text3);
-  letter-spacing: 0.1em; text-transform: uppercase;
-  margin-right: 4px;
-}
-.filter-chip {
-  background: var(--bg3); border: 1px solid var(--border2);
-  border-radius: 100px; color: var(--text2);
-  font-family: 'Crimson Text', serif; font-size: 0.88rem;
-  padding: 5px 14px; cursor: pointer;
-  transition: all .15s; white-space: nowrap;
-}
-.filter-chip:hover { border-color: var(--gold); color: var(--text); }
-.filter-chip.active { background: var(--gold-dim); border-color: var(--gold); color: var(--gold); }
-.filter-select {
-  background: var(--bg3); border: 1px solid var(--border2);
-  border-radius: var(--radius2); color: var(--text2);
-  font-family: 'Crimson Text', serif; font-size: 0.88rem;
-  padding: 5px 28px 5px 10px;
-  cursor: pointer; outline: none;
-  appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%235a5465'/%3E%3C/svg%3E");
-  background-repeat: no-repeat; background-position: right 10px center;
-  transition: border-color .2s;
-}
-.filter-select:focus { border-color: var(--gold); }
-.filter-results {
-  font-size: 0.82rem; color: var(--text3);
-  font-family: 'JetBrains Mono', monospace;
-  margin-left: auto;
-}
-
-/* ── GAME GRID ── */
-#main { max-width: 1400px; margin: 0 auto; padding: 16px 20px 40px; }
-#grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: 16px;
-}
-
-/* ── GAME CARD ── */
-.game-card {
-  background: var(--bg2);
-  border: 1px solid var(--border2);
-  border-radius: var(--radius);
-  overflow: hidden;
-  cursor: pointer;
-  transition: transform .2s, border-color .2s, box-shadow .2s;
-  position: relative;
-}
-.game-card:hover {
-  transform: translateY(-4px) scale(1.01);
-  border-color: var(--border);
-  box-shadow: var(--shadow), 0 0 0 1px rgba(201,168,76,0.15);
-}
-.game-card:hover .card-overlay { opacity: 1; }
-.card-cover {
-  position: relative;
-  padding-top: 133%;
-  background: var(--bg3);
-  overflow: hidden;
-}
-.card-cover img {
-  position: absolute; inset: 0;
-  width: 100%; height: 100%;
-  object-fit: cover;
-  transition: transform .3s;
-}
-.game-card:hover .card-cover img { transform: scale(1.05); }
-.card-cover-fallback {
-  position: absolute; inset: 0;
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  background: linear-gradient(135deg, var(--bg3), var(--bg4));
-  padding: 12px; text-align: center;
-}
-.card-cover-fallback .fallback-icon { font-size: 2.5rem; margin-bottom: 8px; opacity: 0.5; }
-.card-cover-fallback .fallback-title {
-  font-family: 'Cinzel', serif; font-size: 0.7rem;
-  color: var(--text3); line-height: 1.3; font-weight: 600;
-}
-.card-overlay {
-  position: absolute; inset: 0;
-  background: linear-gradient(to top, rgba(13,13,20,0.9) 0%, transparent 60%);
-  opacity: 0; transition: opacity .2s;
-  display: flex; align-items: flex-end; padding: 12px;
-}
-.card-overlay-actions { display: flex; gap: 6px; }
-.card-overlay-btn {
-  background: rgba(13,13,20,0.8); border: 1px solid var(--border);
-  border-radius: 6px; color: var(--text);
-  width: 32px; height: 32px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 0.85rem; transition: all .15s;
-}
-.card-overlay-btn:hover { background: var(--gold); color: #0d0d14; border-color: var(--gold); }
-.card-badge {
-  position: absolute; top: 8px; right: 8px;
-  background: rgba(13,13,20,0.85);
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.65rem; color: var(--gold);
-  padding: 3px 7px;
-}
-.card-played-badge {
-  position: absolute; top: 8px; left: 8px;
-  background: rgba(39,174,96,0.2);
-  border: 1px solid rgba(39,174,96,0.4);
-  border-radius: 6px;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.62rem; color: #27ae60;
-  padding: 3px 7px;
-}
-.card-body { padding: 10px 10px 12px; }
-.card-title {
-  font-family: 'Cinzel', serif;
-  font-size: 0.75rem; font-weight: 600;
-  color: var(--text); line-height: 1.3;
-  margin-bottom: 5px;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-.card-meta {
-  display: flex; align-items: center; justify-content: space-between;
-  margin-bottom: 6px;
-}
-.card-players {
-  font-size: 0.75rem; color: var(--text2);
-  display: flex; align-items: center; gap: 3px;
-}
-.card-duration {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.7rem; color: var(--text3);
-}
-.card-stars {
-  display: flex; gap: 2px;
-  margin-top: 4px;
-}
-.card-stars span { font-size: 0.65rem; }
-.card-stars .filled { color: var(--gold); }
-.card-stars .empty { color: var(--text3); }
-
-/* ── EMPTY STATE ── */
-#empty-state {
-  text-align: center; padding: 80px 20px;
-  display: none;
-}
-#empty-state .empty-icon { font-size: 4rem; margin-bottom: 16px; opacity: 0.3; }
-#empty-state h3 { font-family: 'Cinzel', serif; font-size: 1.2rem; color: var(--text2); margin-bottom: 8px; }
-#empty-state p { color: var(--text3); font-size: 0.9rem; }
-
-/* ── MODAL BASE ── */
-.modal-overlay {
-  position: fixed; inset: 0; z-index: 200;
-  background: rgba(0,0,0,0.8);
-  backdrop-filter: blur(8px);
-  display: flex; align-items: flex-end;
-  opacity: 0; pointer-events: none;
-  transition: opacity .25s;
-}
-.modal-overlay.open { opacity: 1; pointer-events: all; }
-.modal-overlay.open .modal-sheet { transform: translateY(0); }
-.modal-sheet {
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  border-bottom: none;
-  border-radius: 20px 20px 0 0;
-  width: 100%; max-width: 700px;
-  margin: 0 auto;
-  max-height: 92vh;
-  overflow-y: auto;
-  transform: translateY(100%);
-  transition: transform .35s cubic-bezier(0.32,0.72,0,1);
-  scrollbar-width: thin;
-  scrollbar-color: var(--bg4) transparent;
-}
-.modal-handle {
-  width: 36px; height: 4px;
-  background: var(--bg4); border-radius: 2px;
-  margin: 12px auto 0;
-}
-
-/* ── DETAIL MODAL ── */
-.detail-header {
-  display: flex; gap: 20px;
-  padding: 20px 20px 0;
-}
-.detail-cover {
-  width: 120px; min-width: 120px; height: 160px;
-  border-radius: var(--radius2); overflow: hidden;
-  background: var(--bg3);
-  border: 1px solid var(--border);
-}
-.detail-cover img { width: 100%; height: 100%; object-fit: cover; }
-.detail-cover-fallback {
-  width: 100%; height: 100%;
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  background: linear-gradient(135deg, var(--bg3), var(--bg4));
-}
-.detail-cover-fallback .fallback-icon { font-size: 2.5rem; opacity: 0.4; }
-.detail-info { flex: 1; min-width: 0; }
-.detail-title {
-  font-family: 'Cinzel', serif;
-  font-size: 1.25rem; font-weight: 700;
-  color: var(--text); margin-bottom: 4px;
-  line-height: 1.3;
-}
-.detail-publisher {
-  font-size: 0.85rem; color: var(--text2); margin-bottom: 12px;
-}
-.detail-tags {
-  display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px;
-}
-.detail-tag {
-  background: var(--bg3); border: 1px solid var(--border2);
-  border-radius: 100px;
-  font-size: 0.78rem; color: var(--text2);
-  padding: 3px 10px;
-}
-.detail-tag.highlight { border-color: var(--gold); color: var(--gold); }
-.detail-rating-row {
-  display: flex; align-items: center; gap: 12px;
-  margin-bottom: 8px;
-}
-.star-input { display: flex; gap: 4px; }
-.star-input span {
-  font-size: 1.4rem; cursor: pointer;
-  color: var(--text3); transition: color .15s, transform .15s;
-}
-.star-input span:hover, .star-input span.active { color: var(--gold); transform: scale(1.2); }
-.detail-played {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.8rem; color: var(--text2);
-}
-.detail-played strong { color: var(--gold); font-size: 1.1rem; }
-
-.detail-section { padding: 16px 20px 0; }
-.detail-section-title {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.7rem; letter-spacing: 0.12em;
-  text-transform: uppercase; color: var(--text3);
-  margin-bottom: 10px;
-  display: flex; align-items: center; gap: 8px;
-}
-.detail-section-title::after {
-  content: ''; flex: 1; height: 1px; background: var(--border2);
-}
-.detail-desc { font-size: 0.95rem; color: var(--text2); line-height: 1.6; }
-.detail-grid {
-  display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
-}
-.detail-stat {
-  background: var(--bg3); border: 1px solid var(--border2);
-  border-radius: var(--radius2); padding: 10px 14px;
-}
-.detail-stat-label { font-size: 0.75rem; color: var(--text3); margin-bottom: 3px; }
-.detail-stat-value { font-family: 'Cinzel', serif; font-size: 1rem; color: var(--text); }
-
-.detail-actions {
-  display: flex; gap: 10px; padding: 20px;
-  border-top: 1px solid var(--border2); margin-top: 16px;
-}
-.btn-primary {
-  flex: 1; background: var(--gold); border: none;
-  border-radius: var(--radius2); color: #0d0d14;
-  font-family: 'Cinzel', serif; font-size: 0.8rem; font-weight: 700;
-  letter-spacing: 0.08em; padding: 12px;
-  cursor: pointer; transition: all .2s;
-}
-.btn-primary:hover { background: var(--gold2); }
-.btn-secondary {
-  background: var(--bg3); border: 1px solid var(--border);
-  border-radius: var(--radius2); color: var(--text2);
-  font-family: 'Crimson Text', serif; font-size: 0.95rem;
-  padding: 12px 16px; cursor: pointer; transition: all .2s;
-}
-.btn-secondary:hover { border-color: var(--gold); color: var(--text); }
-.btn-danger {
-  background: rgba(192,57,43,0.15); border: 1px solid rgba(192,57,43,0.3);
-  border-radius: var(--radius2); color: #e74c3c;
-  font-family: 'Crimson Text', serif; font-size: 0.95rem;
-  padding: 12px 16px; cursor: pointer; transition: all .2s;
-}
-.btn-danger:hover { background: rgba(192,57,43,0.25); }
-
-/* ── EDIT / ADD MODAL ── */
-.form-grid { padding: 16px 20px; display: flex; flex-direction: column; gap: 14px; }
-.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-.form-group { display: flex; flex-direction: column; gap: 5px; }
-.form-group.full { grid-column: 1 / -1; }
-label {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.68rem; letter-spacing: 0.1em;
-  text-transform: uppercase; color: var(--text3);
-}
-input[type="text"], input[type="number"], input[type="url"],
-select, textarea {
-  background: var(--bg3); border: 1px solid var(--border2);
-  border-radius: var(--radius2); color: var(--text);
-  font-family: 'Crimson Text', serif; font-size: 1rem;
-  padding: 9px 12px; outline: none;
-  transition: border-color .2s;
-  width: 100%;
-}
-input:focus, select:focus, textarea:focus { border-color: var(--gold); }
-textarea { resize: vertical; min-height: 80px; }
-select option { background: var(--bg2); }
-.form-modal-title {
-  font-family: 'Cinzel', serif;
-  font-size: 1.1rem; font-weight: 700;
-  color: var(--gold); padding: 16px 20px 0;
-}
-
-/* ── TOAST ── */
-#toast {
-  position: fixed; bottom: 30px; left: 50%;
-  transform: translateX(-50%) translateY(20px);
-  background: var(--bg3); border: 1px solid var(--border);
-  border-radius: 100px; color: var(--text);
-  font-family: 'Crimson Text', serif; font-size: 0.95rem;
-  padding: 10px 20px;
-  box-shadow: var(--shadow);
-  z-index: 999; opacity: 0;
-  transition: opacity .25s, transform .25s;
-  pointer-events: none; white-space: nowrap;
-}
-#toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-
-/* ── VIEW TOGGLE ── */
-#grid.list-view {
-  grid-template-columns: 1fr;
-}
-#grid.list-view .game-card {
-  display: flex; flex-direction: row;
-}
-#grid.list-view .card-cover {
-  width: 70px; min-width: 70px; padding-top: 0; height: 90px;
-}
-#grid.list-view .card-cover img { position: static; width: 100%; height: 100%; }
-#grid.list-view .card-cover-fallback { position: static; height: 90px; }
-#grid.list-view .card-body { flex: 1; display: flex; align-items: center; gap: 12px; padding: 0 14px; }
-#grid.list-view .card-title { font-size: 0.88rem; -webkit-line-clamp: 1; margin-bottom: 0; }
-#grid.list-view .card-meta { margin-bottom: 0; flex-direction: column; align-items: flex-start; gap: 2px; }
-#grid.list-view .card-overlay { display: none; }
-#grid.list-view .card-badge, #grid.list-view .card-played-badge { top: 6px; }
-
-/* ── RESPONSIVE ── */
-@media (max-width: 600px) {
-  #grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; }
-  .header-inner { height: 56px; }
-  .logo { font-size: 1.1rem; }
-  .detail-header { flex-direction: column; align-items: center; text-align: center; }
-  .detail-tags { justify-content: center; }
-  .detail-rating-row { justify-content: center; }
-  .form-row { grid-template-columns: 1fr; }
-}
-@media (max-width: 400px) {
-  #grid { grid-template-columns: repeat(2, 1fr); }
-}
-
-/* ── LOADING SPINNER ── */
-.spinner {
-  width: 40px; height: 40px;
-  border: 3px solid var(--border2);
-  border-top-color: var(--gold);
-  border-radius: 50%;
-  animation: spin .8s linear infinite;
-  margin: 60px auto;
-}
-@keyframes spin { to { transform: rotate(360deg); } }
-
-/* Scrollbar */
-::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--bg4); border-radius: 3px; }
+:root{--bg:#0d0d14;--bg2:#13131f;--bg3:#1a1a2a;--bg4:#22223a;--gold:#c9a84c;--gold2:#e8cc7a;--gold-dim:rgba(201,168,76,0.15);--text:#e8e0d0;--text2:#9a9080;--text3:#5a5465;--border:rgba(201,168,76,0.2);--border2:rgba(255,255,255,0.06);--radius:12px;--radius2:8px;--shadow:0 8px 32px rgba(0,0,0,0.6)}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{background:var(--bg);color:var(--text);font-family:'Crimson Text',Georgia,serif;font-size:16px;min-height:100vh;overscroll-behavior:none}
+body::before{content:'';position:fixed;inset:0;z-index:0;background:radial-gradient(ellipse 80% 60% at 20% 10%,rgba(201,168,76,0.04) 0%,transparent 60%),radial-gradient(ellipse 60% 80% at 80% 80%,rgba(80,40,120,0.06) 0%,transparent 60%),repeating-linear-gradient(0deg,transparent,transparent 40px,rgba(255,255,255,0.01) 40px,rgba(255,255,255,0.01) 41px),repeating-linear-gradient(90deg,transparent,transparent 40px,rgba(255,255,255,0.01) 40px,rgba(255,255,255,0.01) 41px);pointer-events:none}
+#app{position:relative;z-index:1}
+#header{position:sticky;top:0;z-index:100;background:rgba(13,13,20,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:0 20px}
+.header-inner{max-width:1400px;margin:0 auto;display:flex;align-items:center;gap:16px;height:64px}
+.logo{font-family:'Cinzel',serif;font-size:1.3rem;font-weight:700;color:var(--gold);letter-spacing:0.08em;white-space:nowrap;display:flex;align-items:center;gap:10px;text-decoration:none}
+.search-wrap{flex:1;max-width:420px;position:relative}
+.search-wrap input{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:100px;color:var(--text);font-family:'Crimson Text',serif;font-size:1rem;padding:8px 16px 8px 40px;outline:none;transition:border-color .2s}
+.search-wrap input:focus{border-color:var(--gold)}
+.search-icon{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--text3);font-size:0.9rem;pointer-events:none}
+.header-actions{display:flex;gap:8px;margin-left:auto}
+.btn-icon{background:var(--bg3);border:1px solid var(--border2);border-radius:var(--radius2);color:var(--text);width:40px;height:40px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;cursor:pointer;transition:all .2s}
+.btn-icon:hover{border-color:var(--gold);color:var(--gold)}
+.btn-add{background:var(--gold);border:none;border-radius:var(--radius2);color:#0d0d14;padding:0 16px;height:40px;font-family:'Cinzel',serif;font-size:0.75rem;font-weight:700;letter-spacing:0.08em;cursor:pointer;transition:all .2s;white-space:nowrap;display:flex;align-items:center;gap:6px}
+.btn-add:hover{background:var(--gold2);transform:translateY(-1px)}
+#statbar{background:var(--bg2);border-bottom:1px solid var(--border2);padding:0 20px}
+.statbar-inner{max-width:1400px;margin:0 auto;display:flex;gap:24px;align-items:center;height:44px;overflow-x:auto;scrollbar-width:none}
+.statbar-inner::-webkit-scrollbar{display:none}
+.stat-item{display:flex;align-items:center;gap:6px;white-space:nowrap;font-size:0.82rem;color:var(--text2)}
+.stat-item span{color:var(--gold);font-family:'JetBrains Mono',monospace;font-size:0.85rem}
+.stat-sep{width:1px;height:20px;background:var(--border2);flex-shrink:0}
+#filterbar{padding:16px 20px 0;max-width:1400px;margin:0 auto}
+.filter-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
+.filter-label{font-family:'JetBrains Mono',monospace;font-size:0.7rem;color:var(--text3);letter-spacing:0.1em;text-transform:uppercase;margin-right:4px}
+.filter-chip{background:var(--bg3);border:1px solid var(--border2);border-radius:100px;color:var(--text2);font-family:'Crimson Text',serif;font-size:0.88rem;padding:5px 14px;cursor:pointer;transition:all .15s;white-space:nowrap}
+.filter-chip:hover{border-color:var(--gold);color:var(--text)}
+.filter-chip.active{background:var(--gold-dim);border-color:var(--gold);color:var(--gold)}
+.filter-select{background:var(--bg3);border:1px solid var(--border2);border-radius:var(--radius2);color:var(--text2);font-family:'Crimson Text',serif;font-size:0.88rem;padding:5px 28px 5px 10px;cursor:pointer;outline:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%235a5465'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;transition:border-color .2s}
+.filter-select:focus{border-color:var(--gold)}
+.filter-results{font-size:0.82rem;color:var(--text3);font-family:'JetBrains Mono',monospace;margin-left:auto}
+#main{max-width:1400px;margin:0 auto;padding:16px 20px 40px}
+#grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:16px}
+.game-card{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--radius);overflow:hidden;cursor:pointer;transition:transform .2s,border-color .2s,box-shadow .2s;position:relative}
+.game-card:hover{transform:translateY(-4px) scale(1.01);border-color:var(--border);box-shadow:var(--shadow),0 0 0 1px rgba(201,168,76,0.15)}
+.game-card:hover .card-overlay{opacity:1}
+.card-cover{position:relative;padding-top:133%;background:var(--bg3);overflow:hidden}
+.card-cover img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .3s}
+.game-card:hover .card-cover img{transform:scale(1.05)}
+.card-cover-fallback{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--bg3),var(--bg4));padding:12px;text-align:center}
+.card-cover-fallback .fallback-icon{font-size:2.5rem;margin-bottom:8px;opacity:0.5}
+.card-cover-fallback .fallback-title{font-family:'Cinzel',serif;font-size:0.7rem;color:var(--text3);line-height:1.3;font-weight:600}
+.card-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(13,13,20,0.9) 0%,transparent 60%);opacity:0;transition:opacity .2s;display:flex;align-items:flex-end;padding:12px}
+.card-overlay-actions{display:flex;gap:6px}
+.card-overlay-btn{background:rgba(13,13,20,0.8);border:1px solid var(--border);border-radius:6px;color:var(--text);width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-size:0.85rem;transition:all .15s}
+.card-overlay-btn:hover{background:var(--gold);color:#0d0d14;border-color:var(--gold)}
+.card-badge{position:absolute;top:8px;right:8px;background:rgba(13,13,20,0.85);border:1px solid var(--border);border-radius:6px;font-family:'JetBrains Mono',monospace;font-size:0.65rem;color:var(--gold);padding:3px 7px}
+.card-played-badge{position:absolute;top:8px;left:8px;background:rgba(39,174,96,0.2);border:1px solid rgba(39,174,96,0.4);border-radius:6px;font-family:'JetBrains Mono',monospace;font-size:0.62rem;color:#27ae60;padding:3px 7px}
+.card-body{padding:10px 10px 12px}
+.card-title{font-family:'Cinzel',serif;font-size:0.75rem;font-weight:600;color:var(--text);line-height:1.3;margin-bottom:5px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.card-meta{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.card-players{font-size:0.75rem;color:var(--text2);display:flex;align-items:center;gap:3px}
+.card-duration{font-family:'JetBrains Mono',monospace;font-size:0.7rem;color:var(--text3)}
+.card-stars{display:flex;gap:2px;margin-top:4px}
+.card-stars span{font-size:0.65rem}
+.card-stars .filled{color:var(--gold)}
+.card-stars .empty{color:var(--text3)}
+#empty-state{text-align:center;padding:80px 20px;display:none}
+#empty-state .empty-icon{font-size:4rem;margin-bottom:16px;opacity:0.3}
+#empty-state h3{font-family:'Cinzel',serif;font-size:1.2rem;color:var(--text2);margin-bottom:8px}
+#empty-state p{color:var(--text3);font-size:0.9rem}
+.modal-overlay{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.8);backdrop-filter:blur(8px);display:flex;align-items:flex-end;opacity:0;pointer-events:none;transition:opacity .25s}
+.modal-overlay.open{opacity:1;pointer-events:all}
+.modal-overlay.open .modal-sheet{transform:translateY(0)}
+.modal-sheet{background:var(--bg2);border:1px solid var(--border);border-bottom:none;border-radius:20px 20px 0 0;width:100%;max-width:700px;margin:0 auto;max-height:92vh;overflow-y:auto;transform:translateY(100%);transition:transform .35s cubic-bezier(0.32,0.72,0,1);scrollbar-width:thin;scrollbar-color:var(--bg4) transparent}
+.modal-handle{width:36px;height:4px;background:var(--bg4);border-radius:2px;margin:12px auto 0}
+.detail-header{display:flex;gap:20px;padding:20px 20px 0}
+.detail-cover{width:120px;min-width:120px;height:160px;border-radius:var(--radius2);overflow:hidden;background:var(--bg3);border:1px solid var(--border)}
+.detail-cover img{width:100%;height:100%;object-fit:cover}
+.detail-cover-fallback{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--bg3),var(--bg4))}
+.detail-cover-fallback .fallback-icon{font-size:2.5rem;opacity:0.4}
+.detail-info{flex:1;min-width:0}
+.detail-title{font-family:'Cinzel',serif;font-size:1.25rem;font-weight:700;color:var(--text);margin-bottom:4px;line-height:1.3}
+.detail-publisher{font-size:0.85rem;color:var(--text2);margin-bottom:12px}
+.detail-tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
+.detail-tag{background:var(--bg3);border:1px solid var(--border2);border-radius:100px;font-size:0.78rem;color:var(--text2);padding:3px 10px}
+.detail-tag.highlight{border-color:var(--gold);color:var(--gold)}
+.detail-rating-row{display:flex;align-items:center;gap:12px;margin-bottom:8px}
+.star-input{display:flex;gap:4px}
+.star-input span{font-size:1.4rem;cursor:pointer;color:var(--text3);transition:color .15s,transform .15s}
+.star-input span:hover,.star-input span.active{color:var(--gold);transform:scale(1.2)}
+.detail-played{font-family:'JetBrains Mono',monospace;font-size:0.8rem;color:var(--text2)}
+.detail-played strong{color:var(--gold);font-size:1.1rem}
+.detail-section{padding:16px 20px 0}
+.detail-section-title{font-family:'JetBrains Mono',monospace;font-size:0.7rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--text3);margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.detail-section-title::after{content:'';flex:1;height:1px;background:var(--border2)}
+.detail-desc{font-size:0.95rem;color:var(--text2);line-height:1.6}
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.detail-stat{background:var(--bg3);border:1px solid var(--border2);border-radius:var(--radius2);padding:10px 14px}
+.detail-stat-label{font-size:0.75rem;color:var(--text3);margin-bottom:3px}
+.detail-stat-value{font-family:'Cinzel',serif;font-size:1rem;color:var(--text)}
+.detail-actions{display:flex;gap:10px;padding:20px;border-top:1px solid var(--border2);margin-top:16px}
+.btn-primary{flex:1;background:var(--gold);border:none;border-radius:var(--radius2);color:#0d0d14;font-family:'Cinzel',serif;font-size:0.8rem;font-weight:700;letter-spacing:0.08em;padding:12px;cursor:pointer;transition:all .2s}
+.btn-primary:hover{background:var(--gold2)}
+.btn-secondary{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius2);color:var(--text2);font-family:'Crimson Text',serif;font-size:0.95rem;padding:12px 16px;cursor:pointer;transition:all .2s}
+.btn-secondary:hover{border-color:var(--gold);color:var(--text)}
+.btn-danger{background:rgba(192,57,43,0.15);border:1px solid rgba(192,57,43,0.3);border-radius:var(--radius2);color:#e74c3c;font-family:'Crimson Text',serif;font-size:0.95rem;padding:12px 16px;cursor:pointer;transition:all .2s}
+.btn-danger:hover{background:rgba(192,57,43,0.25)}
+.form-grid{padding:16px 20px;display:flex;flex-direction:column;gap:14px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.form-group{display:flex;flex-direction:column;gap:5px}
+.form-group.full{grid-column:1/-1}
+label{font-family:'JetBrains Mono',monospace;font-size:0.68rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3)}
+input[type="text"],input[type="number"],input[type="url"],select,textarea{background:var(--bg3);border:1px solid var(--border2);border-radius:var(--radius2);color:var(--text);font-family:'Crimson Text',serif;font-size:1rem;padding:9px 12px;outline:none;transition:border-color .2s;width:100%}
+input:focus,select:focus,textarea:focus{border-color:var(--gold)}
+textarea{resize:vertical;min-height:80px}
+select option{background:var(--bg2)}
+.form-modal-title{font-family:'Cinzel',serif;font-size:1.1rem;font-weight:700;color:var(--gold);padding:16px 20px 0}
+#toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--bg3);border:1px solid var(--border);border-radius:100px;color:var(--text);font-family:'Crimson Text',serif;font-size:0.95rem;padding:10px 20px;box-shadow:var(--shadow);z-index:999;opacity:0;transition:opacity .25s,transform .25s;pointer-events:none;white-space:nowrap}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+#grid.list-view{grid-template-columns:1fr}
+#grid.list-view .game-card{display:flex;flex-direction:row}
+#grid.list-view .card-cover{width:70px;min-width:70px;padding-top:0;height:90px}
+#grid.list-view .card-cover img{position:static;width:100%;height:100%}
+#grid.list-view .card-cover-fallback{position:static;height:90px}
+#grid.list-view .card-body{flex:1;display:flex;align-items:center;gap:12px;padding:0 14px}
+#grid.list-view .card-title{font-size:0.88rem;-webkit-line-clamp:1;margin-bottom:0}
+#grid.list-view .card-meta{margin-bottom:0;flex-direction:column;align-items:flex-start;gap:2px}
+#grid.list-view .card-overlay{display:none}
+.spinner{width:40px;height:40px;border:3px solid var(--border2);border-top-color:var(--gold);border-radius:50%;animation:spin .8s linear infinite;margin:60px auto}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media(max-width:600px){#grid{grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px}.header-inner{height:56px}.logo{font-size:1.1rem}.detail-header{flex-direction:column;align-items:center;text-align:center}.detail-tags{justify-content:center}.detail-rating-row{justify-content:center}.form-row{grid-template-columns:1fr}}
+@media(max-width:400px){#grid{grid-template-columns:repeat(2,1fr)}}
+::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--bg4);border-radius:3px}
 </style>
 </head>
 <body>
 <div id="app">
-
-<!-- HEADER -->
 <header id="header">
   <div class="header-inner">
-    <a class="logo" href="#">
-      <span class="logo-icon">♟</span>
-      <span>SPIELREGAL</span>
-    </a>
+    <a class="logo" href="#">♟ <span>SPIELREGAL</span></a>
     <div class="search-wrap">
       <span class="search-icon">🔍</span>
       <input type="text" id="searchInput" placeholder="Spiel suchen…" autocomplete="off">
     </div>
     <div class="header-actions">
-      <button class="btn-icon" id="viewToggle" title="Ansicht wechseln">⊞</button>
+      <button class="btn-icon" id="viewToggle" title="Ansicht">⊞</button>
       <button class="btn-add" id="btnAddGame">＋ Spiel</button>
     </div>
   </div>
 </header>
-
-<!-- STAT BAR -->
 <div id="statbar">
   <div class="statbar-inner">
     <div class="stat-item">🎲 Spiele: <span id="statTotal">0</span></div>
@@ -568,8 +164,6 @@ select option { background: var(--bg2); }
     <div class="stat-item">🏆 Meistgespielt: <span id="statTop">–</span></div>
   </div>
 </div>
-
-<!-- FILTER BAR -->
 <div id="filterbar">
   <div class="filter-row">
     <span class="filter-label">Typ</span>
@@ -582,7 +176,8 @@ select option { background: var(--bg2); }
     <button class="filter-chip" data-filter="type" data-val="Würfel">Würfel</button>
     <button class="filter-chip" data-filter="type" data-val="Strategie">Strategie</button>
     <button class="filter-chip" data-filter="type" data-val="Party">Party</button>
-    <button class="filter-chip" data-filter="type" data-val="Solo">Solo/Solitär</button>
+    <button class="filter-chip" data-filter="type" data-val="Roll & Write">Roll & Write</button>
+    <button class="filter-chip" data-filter="type" data-val="Solo">Solo</button>
   </div>
   <div class="filter-row">
     <span class="filter-label">Spieler</span>
@@ -603,8 +198,6 @@ select option { background: var(--bg2); }
     <span class="filter-results" id="filterResults">0 Spiele</span>
   </div>
 </div>
-
-<!-- MAIN GRID -->
 <div id="main">
   <div id="spinner" class="spinner"></div>
   <div id="grid" style="display:none;"></div>
@@ -613,6 +206,7 @@ select option { background: var(--bg2); }
     <h3>Keine Spiele gefunden</h3>
     <p>Passe die Filter an oder füge ein neues Spiel hinzu.</p>
   </div>
+</div>
 </div>
 
 <!-- DETAIL MODAL -->
@@ -623,50 +217,28 @@ select option { background: var(--bg2); }
   </div>
 </div>
 
-<!-- EDIT / ADD MODAL -->
+<!-- EDIT MODAL -->
 <div class="modal-overlay" id="editModal">
   <div class="modal-sheet">
     <div class="modal-handle"></div>
     <div class="form-modal-title" id="formTitle">Spiel hinzufügen</div>
     <form id="gameForm" onsubmit="return false;">
       <div class="form-grid">
-        <div class="form-group full">
-          <label>Name *</label>
-          <input type="text" id="f_name" required placeholder="Spielname">
+        <div class="form-group full"><label>Name *</label><input type="text" id="f_name" required placeholder="Spielname"></div>
+        <div class="form-row">
+          <div class="form-group"><label>Verlag</label><input type="text" id="f_publisher" placeholder="z.B. Kosmos"></div>
+          <div class="form-group"><label>Jahr</label><input type="number" id="f_year" placeholder="2023" min="1900" max="2030"></div>
         </div>
         <div class="form-row">
-          <div class="form-group">
-            <label>Verlag / Hersteller</label>
-            <input type="text" id="f_publisher" placeholder="z.B. Kosmos">
-          </div>
-          <div class="form-group">
-            <label>Erscheinungsjahr</label>
-            <input type="number" id="f_year" placeholder="2023" min="1900" max="2030">
-          </div>
+          <div class="form-group"><label>Min. Spieler</label><input type="number" id="f_minPlayers" placeholder="1" min="1" max="20"></div>
+          <div class="form-group"><label>Max. Spieler</label><input type="number" id="f_maxPlayers" placeholder="4" min="1" max="20"></div>
         </div>
         <div class="form-row">
-          <div class="form-group">
-            <label>Min. Spieler</label>
-            <input type="number" id="f_minPlayers" placeholder="1" min="1" max="20">
-          </div>
-          <div class="form-group">
-            <label>Max. Spieler</label>
-            <input type="number" id="f_maxPlayers" placeholder="4" min="1" max="20">
-          </div>
+          <div class="form-group"><label>Dauer (Min.)</label><input type="number" id="f_duration" placeholder="60" min="1"></div>
+          <div class="form-group"><label>Preis (€)</label><input type="number" id="f_price" placeholder="39.99" step="0.01" min="0"></div>
         </div>
         <div class="form-row">
-          <div class="form-group">
-            <label>Dauer (Minuten)</label>
-            <input type="number" id="f_duration" placeholder="60" min="1">
-          </div>
-          <div class="form-group">
-            <label>Preis (€)</label>
-            <input type="number" id="f_price" placeholder="39.99" step="0.01" min="0">
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label>Typ / Kategorie</label>
+          <div class="form-group"><label>Typ</label>
             <select id="f_type">
               <option value="Strategie">Strategie</option>
               <option value="Kooperativ">Kooperativ</option>
@@ -675,43 +247,26 @@ select option { background: var(--bg2); }
               <option value="Detektiv">Detektiv / Krimi</option>
               <option value="Karten">Kartenspiel</option>
               <option value="Würfel">Würfelspiel</option>
-              <option value="Party">Party / Familienspiel</option>
+              <option value="Party">Party / Familie</option>
               <option value="Solo">Solo / Solitär</option>
-              <option value="Worker Placement">Worker Placement</option>
               <option value="Roll & Write">Roll & Write</option>
               <option value="Deckbau">Deckbau</option>
               <option value="Sonstiges">Sonstiges</option>
             </select>
           </div>
-          <div class="form-group">
-            <label>Alter (ab)</label>
-            <input type="number" id="f_age" placeholder="10" min="0" max="99">
-          </div>
+          <div class="form-group"><label>Alter (ab)</label><input type="number" id="f_age" placeholder="10" min="0" max="99"></div>
         </div>
-        <div class="form-group full">
-          <label>Cover-Bild URL</label>
-          <input type="url" id="f_image" placeholder="https://…">
-        </div>
-        <div class="form-group full">
-          <label>Beschreibung</label>
-          <textarea id="f_desc" placeholder="Kurze Beschreibung des Spiels…"></textarea>
-        </div>
+        <div class="form-group full"><label>Cover-Bild URL</label><input type="url" id="f_image" placeholder="https://…"></div>
+        <div class="form-group full"><label>Beschreibung</label><textarea id="f_desc" placeholder="Kurze Beschreibung…"></textarea></div>
         <div class="form-group full">
           <label>Bewertung (1–5 Sterne)</label>
           <div class="star-input" id="formStars">
-            <span data-v="1">★</span><span data-v="2">★</span>
-            <span data-v="3">★</span><span data-v="4">★</span><span data-v="5">★</span>
+            <span data-v="1">★</span><span data-v="2">★</span><span data-v="3">★</span><span data-v="4">★</span><span data-v="5">★</span>
           </div>
         </div>
         <div class="form-row">
-          <div class="form-group">
-            <label>Gespielt (Anzahl)</label>
-            <input type="number" id="f_played" placeholder="0" min="0">
-          </div>
-          <div class="form-group">
-            <label>BGG Link</label>
-            <input type="url" id="f_bgg" placeholder="https://boardgamegeek.com/…">
-          </div>
+          <div class="form-group"><label>Gespielt (Anz.)</label><input type="number" id="f_played" placeholder="0" min="0"></div>
+          <div class="form-group"><label>Shop-Link</label><input type="url" id="f_shop" placeholder="https://amazon.de/…"></div>
         </div>
       </div>
       <div class="detail-actions">
@@ -722,469 +277,304 @@ select option { background: var(--bg2); }
   </div>
 </div>
 
-<!-- TOAST -->
 <div id="toast"></div>
 
 <script>
-// ═══════════════════════════════════════════════════════
-// DB
-// ═══════════════════════════════════════════════════════
-const DB_NAME = 'Spielregal', DB_VER = 1, STORE = 'games';
+// ── DB ──────────────────────────────────────────────────
+const DB_NAME='Spielregal',DB_VER=2,STORE='games';
 let db;
+function openDB(){return new Promise((res,rej)=>{const r=indexedDB.open(DB_NAME,DB_VER);r.onupgradeneeded=e=>{const d=e.target.result;if(!d.objectStoreNames.contains(STORE)){const s=d.createObjectStore(STORE,{keyPath:'id',autoIncrement:true});s.createIndex('name','name',{unique:false})}};r.onsuccess=e=>res(e.target.result);r.onerror=e=>rej(e.target.error)})}
+function tx(m='readonly'){return db.transaction(STORE,m).objectStore(STORE)}
+function getAll(){return new Promise((res,rej)=>{const r=tx().getAll();r.onsuccess=()=>res(r.result);r.onerror=e=>rej(e)})}
+function putGame(g){return new Promise((res,rej)=>{const r=tx('readwrite').put(g);r.onsuccess=()=>res(r.result);r.onerror=e=>rej(e)})}
+function delGame(id){return new Promise((res,rej)=>{const r=tx('readwrite').delete(id);r.onsuccess=()=>res();r.onerror=e=>rej(e)})}
 
-function openDB() {
-  return new Promise((res, rej) => {
-    const req = indexedDB.open(DB_NAME, DB_VER);
-    req.onupgradeneeded = e => {
-      const d = e.target.result;
-      if (!d.objectStoreNames.contains(STORE)) {
-        const s = d.createObjectStore(STORE, { keyPath: 'id', autoIncrement: true });
-        s.createIndex('name', 'name', { unique: false });
-        s.createIndex('type', 'type', { unique: false });
-      }
-    };
-    req.onsuccess = e => res(e.target.result);
-    req.onerror = e => rej(e.target.error);
-  });
-}
-function tx(mode = 'readonly') { return db.transaction(STORE, mode).objectStore(STORE); }
-function getAll() { return new Promise((res, rej) => { const r = tx().getAll(); r.onsuccess = () => res(r.result); r.onerror = e => rej(e); }); }
-function getOne(id) { return new Promise((res, rej) => { const r = tx().get(id); r.onsuccess = () => res(r.result); r.onerror = e => rej(e); }); }
-function putGame(g) { return new Promise((res, rej) => { const r = tx('readwrite').put(g); r.onsuccess = () => res(r.result); r.onerror = e => rej(e); }); }
-function delGame(id) { return new Promise((res, rej) => { const r = tx('readwrite').delete(id); r.onsuccess = () => res(); r.onerror = e => rej(e); }); }
-
-// ═══════════════════════════════════════════════════════
-// SEED DATA – 80 Spiele
-// ═══════════════════════════════════════════════════════
+// ── SEED DATA ──────────────────────────────────────────
+// Bilder von: pegasus.de, kosmos.de, spieleoffensive.de, amigo.de, ravensburger.com, asmodee.de
+// Alle URLs direkt von Hersteller-/Shop-CDNs – stabiler als BGG
 const SEED = [
-  {name:"MicroMacro: Crime City",publisher:"Edition Spielwiese",year:2020,minPlayers:1,maxPlayers:4,duration:15,type:"Detektiv",age:12,price:25,desc:"Sucht auf einer riesigen Stadtplan-Illustration nach Hinweisen und löst knifflige Kriminalfälle. Kooperatives Wimmelbild-Detektivspiel.",image:"https://cf.geekdo-images.com/A1eMlTLMcHl08bKQMoTICA__imagepage/img/MuNwQ4T5VF6RfX0OhXGzE2qCaSg=/fit-in/900x600/filters:no_upscale():strip_icc()/pic5765149.jpg",bgg:"https://boardgamegeek.com/boardgame/318977",played:0,rating:0},
-  {name:"Codenames",publisher:"Czech Games Edition",year:2015,minPlayers:2,maxPlayers:8,duration:15,type:"Party",age:14,price:18,desc:"Zwei Teams versuchen mithilfe von Ein-Wort-Hinweisen ihre Agenten zu identifizieren ohne den schwarzen Doppelspion zu enthüllen.",image:"https://cf.geekdo-images.com/F_KDEu0GjdClml8N7c8Imw__imagepage/img/8rdFMQvHUPMfNMCEv3q5sEa-Wkk=/fit-in/900x600/filters:no_upscale():strip_icc()/pic6942991.jpg",bgg:"https://boardgamegeek.com/boardgame/178900",played:0,rating:0},
-  {name:"Here to Slay",publisher:"Exploding Kittens",year:2021,minPlayers:2,maxPlayers:6,duration:30,type:"Karten",age:10,price:22,desc:"Stelle deine Party aus Helden zusammen und besiege Monster. Schnelles kompetitives Kartenspiel im Fantasy-Stil.",image:"https://cf.geekdo-images.com/lTF7PNzQxDO04H0FUVk5uw__imagepage/img/COrE-CkV0KPkXbM-V1T0dPg5Bfs=/fit-in/900x600/filters:no_upscale():strip_icc()/pic6093688.jpg",bgg:"https://boardgamegeek.com/boardgame/328871",played:0,rating:0},
-  {name:"Die Rote Kathedrale",publisher:"Maldito Games",year:2021,minPlayers:2,maxPlayers:4,duration:75,type:"Strategie",age:10,price:40,desc:"Baue die berühmte Basilius-Kathedrale in Moskau. Würfelauswahl, Ressourcen und Gebietskontrolle in einem eleganten Strategiespiel.",image:"https://cf.geekdo-images.com/sz2GlGTHOzBsXfvAjpFSCQ__imagepage/img/jHC2YNcCDiCqYNp1T7_L4U_wJOI=/fit-in/900x600/filters:no_upscale():strip_icc()/pic5946333.jpg",bgg:"https://boardgamegeek.com/boardgame/280447",played:0,rating:0},
-  {name:"Kartograph",publisher:"Thunderworks Games",year:2019,minPlayers:1,maxPlayers:100,duration:30,type:"Roll & Write",age:10,price:15,desc:"Zeichne auf deiner eigenen Karte Landschaften ein und versuche Punkte durch geschicktes Platzieren zu maximieren. Entspanntes Solo-tauglich.",image:"https://cf.geekdo-images.com/rpwCZAKl-OowUHb5gbgTMQ__imagepage/img/RBbmfpBekpPFBHkMC63JKiNGdJ4=/fit-in/900x600/filters:no_upscale():strip_icc()/pic4397932.jpg",bgg:"https://boardgamegeek.com/boardgame/249712",played:0,rating:0},
-  {name:"Die Kartographin",publisher:"Thunderworks Games",year:2023,minPlayers:1,maxPlayers:100,duration:30,type:"Roll & Write",age:10,price:15,desc:"Erweiterung und eigenständiges Spiel zu Kartograph mit neuen Karten, Terrains und Zielvorgaben.",image:"https://cf.geekdo-images.com/wvpGMFNjC_hNVXkDeA3Ycw__imagepage/img/zRf5MKjd_oNQFNkS7iIDNFk_7oM=/fit-in/900x600/filters:no_upscale():strip_icc()/pic7507542.jpg",bgg:"https://boardgamegeek.com/boardgame/367220",played:0,rating:0},
-  {name:"Halli Galli",publisher:"Amigo",year:1990,minPlayers:2,maxPlayers:6,duration:15,type:"Party",age:6,price:10,desc:"Blitzschnelles Reaktionsspiel – wer zuerst die Glocke läutet wenn genau 5 Früchte einer Sorte liegen, bekommt die Karten.",image:"https://cf.geekdo-images.com/JvjO1YWKDfaFz_VnMfFSWA__imagepage/img/QLQcVL2UhSqb75sJhWK7Jy1pTmA=/fit-in/900x600/filters:no_upscale():strip_icc()/pic157358.jpg",bgg:"https://boardgamegeek.com/boardgame/2529",played:0,rating:0},
-  {name:"Robo Chaos",publisher:"Noris",year:2022,minPlayers:2,maxPlayers:4,duration:20,type:"Party",age:8,price:20,desc:"Programmiere deinen Roboter und navigiere chaotisch durch eine sich verändernde Arena. Lustiges Familienspiel.",image:"https://cf.geekdo-images.com/uqhfDoGMeZ-FEaGkD-GGOA__imagepage/img/tnzb9B3s-dktRPH0VKdwdnf4YB4=/fit-in/900x600/filters:no_upscale():strip_icc()/pic6723730.jpg",bgg:"https://boardgamegeek.com/boardgame/344986",played:0,rating:0},
-  {name:"New York Zoo",publisher:"Feuerland Spiele",year:2020,minPlayers:1,maxPlayers:5,duration:45,type:"Strategie",age:7,price:38,desc:"Baue deinen eigenen Zoo in New York! Platziere Tiere und Gehege auf deinem persönlichen Puzzleboard.",image:"https://cf.geekdo-images.com/Zl5qLFNKEVmzl-qK2m93PQ__imagepage/img/qm-xjRjZ4U3HnC_wT-bJqTMK4Hg=/fit-in/900x600/filters:no_upscale():strip_icc()/pic5827025.jpg",bgg:"https://boardgamegeek.com/boardgame/316742",played:0,rating:0},
-  {name:"Nova Luna",publisher:"Spielworxx",year:2019,minPlayers:1,maxPlayers:4,duration:30,type:"Strategie",age:8,price:32,desc:"Legespiel mit Mondphasen-Timing. Wähle Plättchen clever um Aufgaben zu erfüllen und als erster alle Marker zu setzen.",image:"https://cf.geekdo-images.com/kGMfAHX0yw4_aDHFoMCqEg__imagepage/img/N6M_QpRq0KfFzXORMBPvhAkbf8o=/fit-in/900x600/filters:no_upscale():strip_icc()/pic5237202.jpg",bgg:"https://boardgamegeek.com/boardgame/284435",played:0,rating:0},
-  {name:"Frantic",publisher:"Helvetiq",year:2018,minPlayers:2,maxPlayers:8,duration:30,type:"Karten",age:12,price:18,desc:"Das schweizer UNO – aber deutlich böser. Aktionskarten mit brutalen Effekten und kooperativer Schadensbegrenzung.",image:"https://cf.geekdo-images.com/xqoqUCb8G-Uc0lPSIBjzHA__imagepage/img/t1VVd3cVIcPT4PNCM4I3FMrRhOM=/fit-in/900x600/filters:no_upscale():strip_icc()/pic4375499.jpg",bgg:"https://boardgamegeek.com/boardgame/257988",played:0,rating:0},
-  {name:"Fitzek: Killer Cruise",publisher:"Kosmos",year:2023,minPlayers:1,maxPlayers:4,duration:90,type:"Detektiv",age:16,price:35,desc:"Basierend auf Sebastian Fitzeks Thriller – löse auf einem Kreuzfahrtschiff einen Mordfall. Kooperatives Deduktionsspiel.",image:"https://cf.geekdo-images.com/Jf7P8TZTaOCqpLTEv5Mlng__imagepage/img/qRQVvQaSP5vMQW3PiLEq2f_dWC4=/fit-in/900x600/filters:no_upscale():strip_icc()/pic7633451.jpg",bgg:"https://boardgamegeek.com/boardgame/378570",played:0,rating:0},
-  {name:"Fitzek: Safe House",publisher:"Kosmos",year:2022,minPlayers:1,maxPlayers:4,duration:90,type:"Detektiv",age:16,price:35,desc:"Kooperatives Krimi-Erlebnis nach Fitzek – entkäme dem sicheren Haus bevor der Täter euch findet.",image:"https://cf.geekdo-images.com/tYaEJ1u6k8RHUMfJNlUDiA__imagepage/img/AMYr3IHe4L4gHDOUFZJg8aBOh9M=/fit-in/900x600/filters:no_upscale():strip_icc()/pic6840551.jpg",bgg:"https://boardgamegeek.com/boardgame/352700",played:0,rating:0},
-  {name:"Würfel König",publisher:"Drei Hasen in der Abendsonne",year:2019,minPlayers:2,maxPlayers:5,duration:20,type:"Würfel",age:8,price:16,desc:"Würfle und baue dein Königreich. Ressourcen sammeln, Gebäude errichten, Punkte häufen.",image:"https://cf.geekdo-images.com/G2pMM3mFq9iVYXcJv2j49g__imagepage/img/6W9K4sHJr1yBpL9K2PiQOZjzXYo=/fit-in/900x600/filters:no_upscale():strip_icc()/pic4576078.jpg",bgg:"https://boardgamegeek.com/boardgame/274364",played:0,rating:0},
-  {name:"My Park",publisher:"Schmidt Spiele",year:2022,minPlayers:1,maxPlayers:4,duration:45,type:"Roll & Write",age:8,price:25,desc:"Entwirf deinen eigenen Nationalpark. Platziere Tiere, Wege und Gebäude auf deinem persönlichen Parkplan.",image:"https://cf.geekdo-images.com/9m7U2_YW7FwU8c7POeVT4A__imagepage/img/0smVSJrHJMFCGIiOhXuTkgMuQv8=/fit-in/900x600/filters:no_upscale():strip_icc()/pic7183043.jpg",bgg:"https://boardgamegeek.com/boardgame/353712",played:0,rating:0},
-  {name:"Santorini",publisher:"Roxley",year:2016,minPlayers:2,maxPlayers:4,duration:20,type:"Strategie",age:8,price:40,desc:"Abstraktes Strategiespiel auf einer griechischen Insel – baue Türme und klettere höher als dein Gegner. Wunderschönes Design.",image:"https://cf.geekdo-images.com/fg_ssxtZMxKMRuuNqRJMhA__imagepage/img/kBHU7NZJGOLCPPoO8Z-B1T-jXV8=/fit-in/900x600/filters:no_upscale():strip_icc()/pic3283110.jpg",bgg:"https://boardgamegeek.com/boardgame/194655",played:0,rating:0},
-  {name:"Sky Team",publisher:"Scorpion Masqué",year:2023,minPlayers:2,maxPlayers:2,duration:20,type:"Kooperativ",age:12,price:35,desc:"Kooperatives 2-Spieler-Spiel – einer ist Pilot, einer Kopilot. Landet das Flugzeug ohne zu kommunizieren außer über Würfelplatzierungen. Spiel des Jahres 2024.",image:"https://cf.geekdo-images.com/yKmYp4zSCEWtGSEJBmqkAA__imagepage/img/UGkfOJ01HsWt-UuKTm_gTi2p73w=/fit-in/900x600/filters:no_upscale():strip_icc()/pic7769691.jpg",bgg:"https://boardgamegeek.com/boardgame/373106",played:0,rating:0},
-  {name:"MicroMacro: Crime City – Full House",publisher:"Edition Spielwiese",year:2021,minPlayers:1,maxPlayers:4,duration:15,type:"Detektiv",age:12,price:25,desc:"Zweite Auflage von MicroMacro mit neuen Fällen auf einer erweiterten Stadtkarte. Gleich großes Spielerlebnis, frische Rätsel.",image:"https://cf.geekdo-images.com/4wfBVELkDjB97OB36gX_hA__imagepage/img/GhJpIMj9g5Y-k7Y-KNFXMa3xgvE=/fit-in/900x600/filters:no_upscale():strip_icc()/pic6613546.jpg",bgg:"https://boardgamegeek.com/boardgame/342062",played:0,rating:0},
-  {name:"DOG",publisher:"Beleduc",year:2002,minPlayers:2,maxPlayers:6,duration:60,type:"Party",age:8,price:40,desc:"Schiebe deine Figuren mit Karten ums Ziel – strategisches Familienspiel mit Teamoption.",image:"https://cf.geekdo-images.com/lk8nHlJJTiGr_PMHLxZR1Q__imagepage/img/Kn4oLkP0B56o7ghAJ9E7aH-b3qs=/fit-in/900x600/filters:no_upscale():strip_icc()/pic1309767.jpg",bgg:"https://boardgamegeek.com/boardgame/38240",played:0,rating:0},
-  {name:"Mr. Jack",publisher:"Hurrican",year:2006,minPlayers:2,maxPlayers:2,duration:30,type:"Detektiv",age:9,price:30,desc:"Asymmetrisches Duell: Jack the Ripper flieht, der Detektiv jagt. Strategisch und spannend für zwei.",image:"https://cf.geekdo-images.com/KGDdBSS0eEjkXxEa6dJTrg__imagepage/img/7RI0OEbHJhPKOtW5AMefuEV4-CY=/fit-in/900x600/filters:no_upscale():strip_icc()/pic219024.jpg",bgg:"https://boardgamegeek.com/boardgame/21763",played:0,rating:0},
-  {name:"Dungeons, Dice & Danger",publisher:"Feuerland Spiele",year:2020,minPlayers:1,maxPlayers:4,duration:30,type:"Roll & Write",age:10,price:20,desc:"Erkunde Dungeons mit Würfeln und zeichne Wege auf deinen eigenen Verlieskarten. Solides Roll & Write.",image:"https://cf.geekdo-images.com/6-fAWQjOB9oCt4QD7LLSmQ__imagepage/img/ZXPv0j5FiNBEAKLe3y-VGU2IASM=/fit-in/900x600/filters:no_upscale():strip_icc()/pic5462133.jpg",bgg:"https://boardgamegeek.com/boardgame/289284",played:0,rating:0},
-  {name:"Overbooked",publisher:"Game Factory",year:2022,minPlayers:2,maxPlayers:5,duration:30,type:"Party",age:10,price:20,desc:"Hektisches Echtzeit-Kooperativspiel: Manage ein überfülltes Hotel und platziere Gäste korrekt. Chaos garantiert.",image:"https://cf.geekdo-images.com/JuDCTNvBYaHd1JMjkXKMJg__imagepage/img/NVq5FKJP0fniVGYVmS9LMmLKCIE=/fit-in/900x600/filters:no_upscale():strip_icc()/pic6813327.jpg",bgg:"https://boardgamegeek.com/boardgame/350184",played:0,rating:0},
-  {name:"Escape Tales: The Awakening",publisher:"Board&Dice",year:2018,minPlayers:1,maxPlayers:4,duration:180,type:"Escape",age:16,price:35,desc:"Narratives Escape-Room-Erlebnis mit einer App – erkunde Räume, löse Rätsel und entscheide den Verlauf der Geschichte.",image:"https://cf.geekdo-images.com/J3I05JDfVAEVuqeT4WfK4g__imagepage/img/lSHJgNVpJiSRCnQFuRfS4bV4L5E=/fit-in/900x600/filters:no_upscale():strip_icc()/pic4128220.jpg",bgg:"https://boardgamegeek.com/boardgame/261227",played:0,rating:0},
-  {name:"Stillsee – Ein einzigartiges Detektivspiel",publisher:"Kosmos",year:2023,minPlayers:1,maxPlayers:4,duration:120,type:"Detektiv",age:14,price:30,desc:"Detektiv-Abenteuer rund um einen geheimnisvollen See. Stimmungsvolle Kulisse, kooperative Spurensuche.",image:"https://m.media-amazon.com/images/I/71TFLjjVJAL._AC_SL1500_.jpg",bgg:"https://boardgamegeek.com/boardgame/393220",played:0,rating:0},
-  {name:"Dorfromantik – Das Brettspiel",publisher:"Pegasus Spiele",year:2022,minPlayers:1,maxPlayers:6,duration:60,type:"Kooperativ",age:8,price:40,desc:"Umsetzung des Indie-Videospiels – legt gemeinsam Landschaftsplättchen um möglichst viele Punkte zu erzielen. Kennerspiel 2023.",image:"https://cf.geekdo-images.com/s0HaqSSBCMxAaZ4m95-2RQ__imagepage/img/l2UPRnBa6jHdmwKMQeqX7rSaAP0=/fit-in/900x600/filters:no_upscale():strip_icc()/pic7026725.jpg",bgg:"https://boardgamegeek.com/boardgame/370591",played:0,rating:0},
-  {name:"Flügelschlag",publisher:"Stonemaier Games",year:2019,minPlayers:1,maxPlayers:5,duration:90,type:"Strategie",age:10,price:55,desc:"Preisgekröntes Spiel über Vogelkunde. Sammle Vögel mit einzigartigen Fähigkeiten in deinen Lebensräumen. Spiel des Jahres 2019.",image:"https://cf.geekdo-images.com/yLZJCVLlIx4c7eJEWUNJ7w__imagepage/img/8EBAxHNovHHmQdUPWDpUE3tHjNM=/fit-in/900x600/filters:no_upscale():strip_icc()/pic4458123.jpg",bgg:"https://boardgamegeek.com/boardgame/266192",played:0,rating:0},
-  {name:"Paleo",publisher:"Hans im Glück",year:2020,minPlayers:2,maxPlayers:4,duration:75,type:"Kooperativ",age:10,price:45,desc:"Kooperatives Steinzeit-Überlebensspiel – erkunde Karten, sammle Ressourcen und überlebe den Urwald. Kennerspiel 2021.",image:"https://cf.geekdo-images.com/BiV-QKRZWCaY2bGrjqGNnA__imagepage/img/QnL3ux4Vc6DZKQ5CsK_KKTG3TkE=/fit-in/900x600/filters:no_upscale():strip_icc()/pic6009695.jpg",bgg:"https://boardgamegeek.com/boardgame/300531",played:0,rating:0},
-  {name:"Bluff",publisher:"FoxMind",year:1993,minPlayers:2,maxPlayers:6,duration:20,type:"Würfel",age:8,price:20,desc:"Klassisches Bluff-Würfelspiel (auch Perudo) – schätze oder überschätze verdeckte Würfel. Psychologie und Risiko.",image:"https://cf.geekdo-images.com/E_B7PEtPvJWOPIVuQVWFZA__imagepage/img/RuR64XDRK2HMmj_P5TrA9XPU0DM=/fit-in/900x600/filters:no_upscale():strip_icc()/pic158548.jpg",bgg:"https://boardgamegeek.com/boardgame/2062",played:0,rating:0},
-  {name:"My Island",publisher:"Kosmos",year:2022,minPlayers:2,maxPlayers:4,duration:30,type:"Roll & Write",age:8,price:30,desc:"Episches Legespiel – deine Insel entwickelt sich über 24 Spielabende mit bleibenden Änderungen. Legacy-Light.",image:"https://cf.geekdo-images.com/o5RrJWoEi1MwrPKV6UWoMw__imagepage/img/nPGwzS4nD_TIJqTM8QUF1Kw1UXg=/fit-in/900x600/filters:no_upscale():strip_icc()/pic6843080.jpg",bgg:"https://boardgamegeek.com/boardgame/356201",played:0,rating:0},
-  {name:"Investigation Files – Mord in Berlin",publisher:"Kosmos",year:2022,minPlayers:1,maxPlayers:4,duration:60,type:"Detektiv",age:14,price:28,desc:"Löse einen Mordfall in Berlin. Kooperatives Kartenspiel mit Zeitungsartikeln, Fotos und Indizien.",image:"https://m.media-amazon.com/images/I/81Sz3G5TqcL._AC_SL1500_.jpg",bgg:"https://boardgamegeek.com/boardgame/357073",played:0,rating:0},
-  {name:"Robinson Crusoe – Abenteuer auf der verfluchten Insel",publisher:"Portal Games",year:2012,minPlayers:1,maxPlayers:4,duration:120,type:"Kooperativ",age:14,price:60,desc:"Überlebe auf einer verfluchten Insel. Eines der besten kooperativen Abenteuerspiele mit tiefem Narrativ.",image:"https://cf.geekdo-images.com/I6PGMunXDMWBLCHhVSNpRg__imagepage/img/0mUikNPbNJi7JsVLwkYBbWbsxgI=/fit-in/900x600/filters:no_upscale():strip_icc()/pic1429843.jpg",bgg:"https://boardgamegeek.com/boardgame/121921",played:0,rating:0},
-  {name:"Das Original Malefiz-Spiel",publisher:"Ravensburger",year:1960,minPlayers:2,maxPlayers:4,duration:45,type:"Party",age:6,price:22,desc:"Klassiker: Setze Sperrsteine um Gegner zu blockieren und bring als Erster alle Figuren ins Ziel.",image:"https://cf.geekdo-images.com/GmSAMUGwZDK5L7RUKbXJHQ__imagepage/img/fZnqRcVz7FRs4ZBxBLkMl7neLm0=/fit-in/900x600/filters:no_upscale():strip_icc()/pic1266476.jpg",bgg:"https://boardgamegeek.com/boardgame/844",played:0,rating:0},
-  {name:"Die Patin",publisher:"Kosmos",year:2021,minPlayers:2,maxPlayers:5,duration:75,type:"Strategie",age:16,price:40,desc:"Baue dein Mafia-Imperium auf. Führe deine Familie zur Macht durch Deals, Druck und Deduktion.",image:"https://cf.geekdo-images.com/jN8YrVi3bGsJMOoOqFb9KQ__imagepage/img/kKt4nNr8jFSM7JKzDq-43OsEj7g=/fit-in/900x600/filters:no_upscale():strip_icc()/pic6148684.jpg",bgg:"https://boardgamegeek.com/boardgame/336986",played:0,rating:0},
-  {name:"Castle Combo",publisher:"25th Century Games",year:2023,minPlayers:1,maxPlayers:4,duration:20,type:"Karten",age:8,price:20,desc:"Baue dein mittelalterliches Schloss mit Karten-Drafting und schlauen Kombo-Effekten.",image:"https://cf.geekdo-images.com/tYn3sF1R5vkIi6TDYmpPvQ__imagepage/img/bHiL9x9fQH2AxbB2_X7e7ycL41c=/fit-in/900x600/filters:no_upscale():strip_icc()/pic7629875.jpg",bgg:"https://boardgamegeek.com/boardgame/379792",played:0,rating:0},
-  {name:"Carp City",publisher:"Game Brewer",year:2022,minPlayers:1,maxPlayers:4,duration:60,type:"Strategie",age:10,price:35,desc:"Baue eine Stadt für Karpfen! Ungewöhnliches Städtebau-Spiel mit cleveren Mechaniken.",image:"https://cf.geekdo-images.com/KDLXZeZb-XYGNl5_7hkEHw__imagepage/img/iOFijqCvxBrPmIZJEq1PiAFZL9Q=/fit-in/900x600/filters:no_upscale():strip_icc()/pic7170617.jpg",bgg:"https://boardgamegeek.com/boardgame/355640",played:0,rating:0},
-  {name:"Bomb Busters",publisher:"Iello",year:2023,minPlayers:2,maxPlayers:5,duration:30,type:"Kooperativ",age:10,price:30,desc:"Kooperatives Echtzeitspiel – entschärfe Bomben durch blitzschnelle Kommunikation und Teamarbeit.",image:"https://cf.geekdo-images.com/daqKBNZ8iFdZ8BpMNFIW8g__imagepage/img/1nqkh1FpHooCvEzWaW16DdLQ4IQ=/fit-in/900x600/filters:no_upscale():strip_icc()/pic7526382.jpg",bgg:"https://boardgamegeek.com/boardgame/384071",played:0,rating:0},
-  {name:"Azul",publisher:"Plan B Games",year:2017,minPlayers:2,maxPlayers:4,duration:45,type:"Strategie",age:8,price:35,desc:"Lege Mosaikfliesen in deinen Palast. Taktisches Drafting-Spiel, das 2018 das Spiel des Jahres gewann.",image:"https://cf.geekdo-images.com/aCl3vMtFmjvkMTFMhCXiHg__imagepage/img/Uq_IW7Niv9eO2NG7QoXIlBWRIio=/fit-in/900x600/filters:no_upscale():strip_icc()/pic6973961.jpg",bgg:"https://boardgamegeek.com/boardgame/230802",played:0,rating:0},
-  {name:"Escape the Box – Der verfolgte Sherlock",publisher:"Huch!",year:2023,minPlayers:2,maxPlayers:5,duration:60,type:"Escape",age:12,price:30,desc:"Sherlock Holmes wird verfolgt – löse Rätsel und entkäme der Gefahr in diesem Escape-Room-Kartenspiel.",image:"https://m.media-amazon.com/images/I/71rM2Xt9pRL._AC_SL1500_.jpg",bgg:"https://boardgamegeek.com/boardgame/393100",played:0,rating:0},
-  {name:"Hidden Stones",publisher:"Piatnik",year:2022,minPlayers:2,maxPlayers:6,duration:25,type:"Karten",age:8,price:15,desc:"Sammelspiel mit versteckten Informationen – schätze die Steine deiner Gegner und sammle die wertvollsten.",image:"https://m.media-amazon.com/images/I/71PZ7y95jML._AC_SL1500_.jpg",bgg:"https://boardgamegeek.com/boardgame/366920",played:0,rating:0},
-  {name:"Dominoes",publisher:"Various",year:1800,minPlayers:2,maxPlayers:4,duration:20,type:"Party",age:6,price:10,desc:"Der Klassiker – verbinde Steine mit übereinstimmenden Zahlen. Zeitloser Familienspaß.",image:"https://m.media-amazon.com/images/I/71JHr8H3-7L._AC_SL1500_.jpg",bgg:"https://boardgamegeek.com/boardgame/2759",played:0,rating:0},
-  {name:"That's not a Hat",publisher:"Ravensburger",year:2023,minPlayers:3,maxPlayers:8,duration:15,type:"Party",age:8,price:12,desc:"Merkspiel mit Wortkarten und Bluffpotenzial – gib Karten weiter und behaupte was du möchtest. Schneller Partyspaß.",image:"https://cf.geekdo-images.com/2mzT-EqNBL8c-2RI3TfKyA__imagepage/img/SN7ycb5bLkZXuN2y5WePuNMU5KE=/fit-in/900x600/filters:no_upscale():strip_icc()/pic7594041.jpg",bgg:"https://boardgamegeek.com/boardgame/375737",played:0,rating:0},
-  {name:"Camel Up",publisher:"Eggertspiele",year:2014,minPlayers:2,maxPlayers:8,duration:30,type:"Party",age:8,price:30,desc:"Wette auf stapelnde Kamele beim Rennen durchs Wüstenzelt. Chaotisch, lustig, unvorhersehbar.",image:"https://cf.geekdo-images.com/cf_gameimages/E_jkxQqLTRPePPpkGJZ8_Q__imagepage/img/0K9zGHKSyAcLBFjOliqIGWVYYG8=/fit-in/900x600/filters:no_upscale():strip_icc()/pic7695717.jpg",bgg:"https://boardgamegeek.com/boardgame/153938",played:0,rating:0},
-  {name:"Living Forest",publisher:"Lumis",year:2021,minPlayers:1,maxPlayers:4,duration:40,type:"Strategie",age:10,price:40,desc:"Schütze den heiligen Wald als Waldgeist. Deckbau, Symbole und drei mögliche Siegbedingungen. Kennerspiel 2022.",image:"https://cf.geekdo-images.com/fxHwPJmtEjHRXkQVh6ldxQ__imagepage/img/p3dEWMUKiQ24RJJB3U_J2sFVhHg=/fit-in/900x600/filters:no_upscale():strip_icc()/pic6615932.jpg",bgg:"https://boardgamegeek.com/boardgame/328479",played:0,rating:0},
-  {name:"Istanbul – Big Box",publisher:"Pegasus Spiele",year:2018,minPlayers:2,maxPlayers:5,duration:60,type:"Strategie",age:10,price:55,desc:"Bazaar-Spiel im osmanischen Istanbul inklusive aller Erweiterungen. Bewege deinen Händler und sammle Rubine.",image:"https://cf.geekdo-images.com/fTBVJVpT5V3hSlRrLbM93g__imagepage/img/3P_MHKTFe5gkR98E_H0iMNxaCO0=/fit-in/900x600/filters:no_upscale():strip_icc()/pic3967122.jpg",bgg:"https://boardgamegeek.com/boardgame/253716",played:0,rating:0},
-  {name:"Mystery House – Das 3D Escape-Abenteuer",publisher:"Giochi Uniti",year:2020,minPlayers:1,maxPlayers:5,duration:60,type:"Escape",age:12,price:35,desc:"3D-Haus mit App-Unterstützung – erkunde Zimmer, finde Gegenstände und löse Rätsel in Echtzeit.",image:"https://cf.geekdo-images.com/3kUZX7rU3c9cNXxinqCBzg__imagepage/img/C8FNwvxfOFc3JNa3MfTAV8hAlwc=/fit-in/900x600/filters:no_upscale():strip_icc()/pic5482090.jpg",bgg:"https://boardgamegeek.com/boardgame/300531",played:0,rating:0},
-  {name:"Elfer Raus!",publisher:"Ravensburger",year:1987,minPlayers:2,maxPlayers:6,duration:30,type:"Karten",age:8,price:12,desc:"Lege Karten in aufsteigender oder absteigender Reihenfolge ab. Klassisches Familienkartenspiel.",image:"https://m.media-amazon.com/images/I/71c3yYKoJGL._AC_SL1500_.jpg",bgg:"https://boardgamegeek.com/boardgame/2405",played:0,rating:0},
-  {name:"Escape Room – In der Hand des Entführers",publisher:"Identity Games",year:2017,minPlayers:3,maxPlayers:5,duration:60,type:"Escape",age:16,price:25,desc:"Löse in 60 Minuten den Fall des Entführers. Klassisches kooperatives Escape-Room-Erlebnis.",image:"https://m.media-amazon.com/images/I/81OiDXZRQtL._AC_SL1000_.jpg",bgg:"https://boardgamegeek.com/boardgame/212284",played:0,rating:0},
-  {name:"Escape Room 2 – Das Spiel",publisher:"Identity Games",year:2018,minPlayers:3,maxPlayers:5,duration:60,type:"Escape",age:16,price:25,desc:"Nachfolger des Originals mit neuen Fällen und Mechaniken. Wieder 60 Minuten Escape-Abenteuer.",image:"https://m.media-amazon.com/images/I/81XwwbPOZeL._AC_SL1500_.jpg",bgg:"https://boardgamegeek.com/boardgame/254659",played:0,rating:0},
-  {name:"Make 'n' Break",publisher:"Ravensburger",year:2004,minPlayers:2,maxPlayers:10,duration:20,type:"Party",age:7,price:30,desc:"Bau Bauklötzchen-Strukturen nach Vorgabe gegen die Uhr. Hektischer Familienspaß mit 3D-Blöcken.",image:"https://m.media-amazon.com/images/I/61JcFwXR5cL._AC_SL1000_.jpg",bgg:"https://boardgamegeek.com/boardgame/14085",played:0,rating:0},
-  {name:"6 Nimmt!",publisher:"Amigo",year:1994,minPlayers:2,maxPlayers:10,duration:45,type:"Karten",age:8,price:10,desc:"Spiele Karten auf vier Reihen und vermeide die sechste Karte aufzunehmen. Schneller Klassiker.",image:"https://cf.geekdo-images.com/IXsqLjq76gWKAyQYJNQiAA__imagepage/img/zBe0KNHQEBRDmOlXIQMG7OWnOlo=/fit-in/900x600/filters:no_upscale():strip_icc()/pic2602724.jpg",bgg:"https://boardgamegeek.com/boardgame/432",played:0,rating:0},
-  {name:"Kribbeln",publisher:"NSV",year:2022,minPlayers:2,maxPlayers:6,duration:20,type:"Würfel",age:8,price:12,desc:"Roll & Write mit Nervenkitzel – würfle und kreuze Felder an, aber geh nicht zu weit!",image:"https://m.media-amazon.com/images/I/71RQ-P-QNYL._AC_SL1500_.jpg",bgg:"https://boardgamegeek.com/boardgame/359720",played:0,rating:0},
-  {name:"Bis 20!",publisher:"Amigo",year:2019,minPlayers:2,maxPlayers:10,duration:10,type:"Karten",age:6,price:8,desc:"Lege Karten um genau 20 zu erreichen – nie zu überschreiten. Schnelles Familienspiel.",image:"https://m.media-amazon.com/images/I/71GXD3XJMoL._AC_SL1500_.jpg",bgg:"https://boardgamegeek.com/boardgame/271591",played:0,rating:0},
-  {name:"Palm Island",publisher:"Portal Dragon",year:2018,minPlayers:1,maxPlayers:2,duration:15,type:"Solo",age:10,price:15,desc:"Kompaktes Solo-Kartenspiel in der Handfläche – entwickle deine Insel in 17 Runden mit nur 17 Karten.",image:"https://cf.geekdo-images.com/DUO2hz9AlLOH8p9ED-lkKg__imagepage/img/UKuLCKVe0KW8F6RWj5Fo3J62xwU=/fit-in/900x600/filters:no_upscale():strip_icc()/pic4409480.jpg",bgg:"https://boardgamegeek.com/boardgame/239464",played:0,rating:0},
-  {name:"Escape the Room – Das Geheimnis des Refugiums von Dr. Gravely",publisher:"Think Fun",year:2017,minPlayers:3,maxPlayers:8,duration:90,type:"Escape",age:13,price:25,desc:"Großes Escape-Room-Erlebnis für die ganze Familie mit illustrierten Szenen und kniffligen Rätseln.",image:"https://m.media-amazon.com/images/I/81GcqzT13fL._AC_SL1500_.jpg",bgg:"https://boardgamegeek.com/boardgame/217652",played:0,rating:0},
-  {name:"Level 8 Master",publisher:"Ravensburger",year:2012,minPlayers:2,maxPlayers:6,duration:60,type:"Karten",age:8,price:12,desc:"Fortgeschrittene Version von Level 8 mit mehr Strategieelementen und Kartenvariation.",image:"https://m.media-amazon.com/images/I/71pnOLxjxpL._AC_SL1500_.jpg",bgg:"https://boardgamegeek.com/boardgame/128901",played:0,rating:0},
-  {name:"Deckscape – Der Test",publisher:"dV Giochi",year:2017,minPlayers:1,maxPlayers:6,duration:30,type:"Escape",age:12,price:10,desc:"Escape-Room in einem Kartenspiel – der erste Deckscape-Fall mit überraschendem Ende. Günstig und gut.",image:"https://cf.geekdo-images.com/WMHoxKBVs2MuNmfz9m-W4Q__imagepage/img/jSDvOe_jFV5u3x8KDMR7kA5DhAM=/fit-in/900x600/filters:no_upscale():strip_icc()/pic3706905.jpg",bgg:"https://boardgamegeek.com/boardgame/222636",played:0,rating:0},
-  {name:"Das Spiel des Lebens – Kartenspiel",publisher:"Hasbro",year:2010,minPlayers:2,maxPlayers:4,duration:20,type:"Karten",age:8,price:12,desc:"Kartenversion des Klassikers – triff Lebensentscheidungen in vereinfachter Form.",image:"https://m.media-amazon.com/images/I/71yJkJerL1L._AC_SL1500_.jpg",bgg:"https://boardgamegeek.com/boardgame/71001",played:0,rating:0},
-  {name:"Sherlock – 13 Geiseln",publisher:"Iello",year:2019,minPlayers:2,maxPlayers:8,duration:30,type:"Detektiv",age:10,price:18,desc:"Deduziere wer der Entführer ist anhand von Hinweiskarten. Kurzweiliges Detektivkartenspiel.",image:"https://cf.geekdo-images.com/O-LRsEm_rGbPBYS5hbqGSg__imagepage/img/JCZV-PMulMVJrMEajmAh8JMfPDI=/fit-in/900x600/filters:no_upscale():strip_icc()/pic4754063.jpg",bgg:"https://boardgamegeek.com/boardgame/274093",played:0,rating:0},
-  {name:"Escape Dysturbia",publisher:"Huch!",year:2019,minPlayers:2,maxPlayers:5,duration:60,type:"Escape",age:12,price:28,desc:"Detektivisches Escape-Room-Spiel in einer dystopischen Welt mit Codes und versteckten Hinweisen.",image:"https://m.media-amazon.com/images/I/81MZ+q47MtL._AC_SL1500_.jpg",bgg:"https://boardgamegeek.com/boardgame/290946",played:0,rating:0},
-  {name:"Crime Story – Das Detektiv-Spiel",publisher:"Kosmos",year:2020,minPlayers:2,maxPlayers:6,duration:45,type:"Detektiv",age:12,price:25,desc:"Löse Verbrechensgeschichten durch Kartenkombinationen und Deduktion. Spannend für die ganze Familie.",image:"https://m.media-amazon.com/images/I/81bLm0Vm8XL._AC_SL1500_.jpg",bgg:"https://boardgamegeek.com/boardgame/308638",played:0,rating:0},
-  {name:"Escape Room – Das Spiel",publisher:"Identity Games",year:2016,minPlayers:3,maxPlayers:5,duration:60,type:"Escape",age:16,price:30,desc:"Das Original Escape-Room-Brettspiel mit Decoder und mehreren Abenteuern in einer Box.",image:"https://m.media-amazon.com/images/I/81QFWUBOgKL._AC_SL1500_.jpg",bgg:"https://boardgamegeek.com/boardgame/212284",played:0,rating:0},
-  {name:"Kitchen Rush",publisher:"Alderac Entertainment",year:2017,minPlayers:1,maxPlayers:4,duration:30,type:"Kooperativ",age:8,price:40,desc:"Echtzeit-Kochspiel mit Sanduhr-Mechanik – betreibt gemeinsam ein Restaurant ohne zu reden.",image:"https://cf.geekdo-images.com/5oWIhXRVQONWXBJe4cqMfQ__imagepage/img/JhAqyeNXkZRlwi5vGwFNrLSs0qk=/fit-in/900x600/filters:no_upscale():strip_icc()/pic3671738.jpg",bgg:"https://boardgamegeek.com/boardgame/228271",played:0,rating:0},
-  {name:"Spirit Island",publisher:"Greater Than Games",year:2017,minPlayers:1,maxPlayers:4,duration:120,type:"Kooperativ",age:13,price:65,desc:"Spielt als mächtige Geister und vertreibt Eindringlinge von einer heiligen Insel. Komplexes kooperatives Meisterwerk.",image:"https://cf.geekdo-images.com/kjMbMR0Vz5WMGxVh7ZPJIA__imagepage/img/n0PiEw_FHuKSLkQ4VdVWB22DUWI=/fit-in/900x600/filters:no_upscale():strip_icc()/pic7001633.jpg",bgg:"https://boardgamegeek.com/boardgame/162886",played:0,rating:0},
-  {name:"Detective – Ein Krimi-Brettspiel",publisher:"Portal Games",year:2018,minPlayers:1,maxPlayers:5,duration:180,type:"Detektiv",age:16,price:50,desc:"Modernes Ermittlungsspiel mit echter Verbrechens-Datenbank online. Tiefes narratives Erlebnis.",image:"https://cf.geekdo-images.com/aB_0FRxVRqFTGCkmLMmqjA__imagepage/img/hOVBvGWA4rLpnU5Ts9FV5OL5I1U=/fit-in/900x600/filters:no_upscale():strip_icc()/pic4299780.jpg",bgg:"https://boardgamegeek.com/boardgame/223321",played:0,rating:0},
-  {name:"Catania – Das Duell",publisher:"Kosmos",year:2022,minPlayers:2,maxPlayers:2,duration:30,type:"Strategie",age:10,price:18,desc:"Die 2-Spieler-Variante von Catan – schnell, taktisch und ohne Brett mit Karten gespielt.",image:"https://cf.geekdo-images.com/Sxb4mGW5EFKTl1yBv6Z7Xw__imagepage/img/cbIFj_FGXfHXzSqUyXlFSAfHGU8=/fit-in/900x600/filters:no_upscale():strip_icc()/pic6942971.jpg",bgg:"https://boardgamegeek.com/boardgame/342097",played:0,rating:0},
-  {name:"Twister",publisher:"Hasbro",year:1966,minPlayers:2,maxPlayers:4,duration:20,type:"Party",age:6,price:15,desc:"Bewegungsspiel mit Körpereinsatz – rechte Hand rot, linker Fuß blau. Zeitloser Partyklassiker.",image:"https://m.media-amazon.com/images/I/91hm5OHqMoL._AC_SL1500_.jpg",bgg:"https://boardgamegeek.com/boardgame/5894",played:0,rating:0},
-  {name:"Jaipur",publisher:"Gameworks",year:2009,minPlayers:2,maxPlayers:2,duration:30,type:"Karten",age:12,price:18,desc:"Handelsspiel für zwei – kaufe und verkaufe Waren geschickt und werde der reichste Händler Jaipurs.",image:"https://cf.geekdo-images.com/5oI-ox5zM1XysBxCZQ_y3Q__imagepage/img/VCOy8PnHwUQTQWqEOQbcWAUjqiM=/fit-in/900x600/filters:no_upscale():strip_icc()/pic6091146.jpg",bgg:"https://boardgamegeek.com/boardgame/54043",played:0,rating:0},
-  {name:"Monopoly Millionär",publisher:"Hasbro",year:2012,minPlayers:2,maxPlayers:4,duration:45,type:"Party",age:8,price:28,desc:"Werde als Erster Millionär statt alle anderen zu ruinieren. Schnellere, frischere Monopoly-Variante.",image:"https://m.media-amazon.com/images/I/61HpC4wN9CL._AC_SL1500_.jpg",bgg:"https://boardgamegeek.com/boardgame/131357",played:0,rating:0},
-  {name:"Monopoly Banking Ultra",publisher:"Hasbro",year:2014,minPlayers:2,maxPlayers:4,duration:60,type:"Party",age:8,price:40,desc:"Monopoly mit elektronischem Banking-Gerät und Kreditkarten – kein Papiergeld nötig.",image:"https://m.media-amazon.com/images/I/71z5oAvLl+L._AC_SL1500_.jpg",bgg:"https://boardgamegeek.com/boardgame/180264",played:0,rating:0},
-  {name:"Cluedo",publisher:"Hasbro",year:1949,minPlayers:3,maxPlayers:6,duration:60,type:"Detektiv",age:8,price:20,desc:"Der Klassiker der Detektivspiele – wer hat es getan, womit und wo? Zeitloser Deduktionsklassiker.",image:"https://cf.geekdo-images.com/GsZ80oXwJcBXX_sIR4LmhA__imagepage/img/M7yKb8KLgwu0k7TLSQ9Lrn0p8UE=/fit-in/900x600/filters:no_upscale():strip_icc()/pic6010115.jpg",bgg:"https://boardgamegeek.com/boardgame/1294",played:0,rating:0},
-  {name:"Holz-Wackelturm",publisher:"Various",year:1983,minPlayers:2,maxPlayers:6,duration:20,type:"Party",age:6,price:20,desc:"Ziehe Holzklötze und stapele sie oben auf – ohne dass der Turm umfällt. Jenga-Klassiker.",image:"https://m.media-amazon.com/images/I/71-6LVqI6BL._AC_SL1500_.jpg",bgg:"https://boardgamegeek.com/boardgame/2452",played:0,rating:0},
-  {name:"Zombie Teenz Evolution",publisher:"Le Scorpion Masqué",year:2020,minPlayers:2,maxPlayers:4,duration:15,type:"Kooperativ",age:8,price:20,desc:"Kooperatives Legacy-Spiel für Familien – befreit die Stadt von Zombies und schalte neue Fähigkeiten frei.",image:"https://cf.geekdo-images.com/JVoiDHGxpBXZLU4pAHBHJw__imagepage/img/lAVHHWNJVBFdI8oFOqAKI5YLJhE=/fit-in/900x600/filters:no_upscale():strip_icc()/pic5386437.jpg",bgg:"https://boardgamegeek.com/boardgame/302718",played:0,rating:0},
+  {name:"MicroMacro: Crime City",publisher:"Edition Spielwiese / Pegasus",year:2020,minPlayers:1,maxPlayers:4,duration:15,type:"Detektiv",age:10,price:20,desc:"Kooperatives Wimmelbild-Detektivspiel auf einem riesigen 75×110 cm Stadtplan. Löst gemeinsam 16 Kriminalfälle – von Diebstahl bis Mord. Spiel des Jahres 2021.",image:"https://www.pegasus.de/media/catalog/product/5/9/59060g_box_right_300dpi_freigestellt.png",shop:"https://www.amazon.de/dp/B09M4QJ5SC",played:0,rating:0},
+  {name:"Codenames",publisher:"Czech Games Edition / Asmodee",year:2015,minPlayers:2,maxPlayers:8,duration:15,type:"Party",age:14,price:18,desc:"Zwei Agenten-Teams wetteifern darum, ihre Geheimkontakte anhand von Einwort-Hinweisen zu finden. Wer den schwarzen Agenten aufdeckt, verliert. Spiel des Jahres 2016.",image:"https://www.asmodee.de/fileadmin/asmodee_products/de/games/codenames/CGE00043_Codenames_3D.jpg",shop:"https://www.amazon.de/dp/B017WFKS16",played:0,rating:0},
+  {name:"Here to Slay",publisher:"Exploding Kittens",year:2021,minPlayers:2,maxPlayers:6,duration:30,type:"Karten",age:10,price:25,desc:"Stelle eine Heldenparty aus Warriors, Rangers, Wizards & Co. zusammen und besiege Monster, bevor es die anderen tun. Schnelles kompetitives Fantasy-Kartenspiel.",image:"https://cdn.shopify.com/s/files/1/0345/9180/products/HTS-BoxShot.png",shop:"https://www.amazon.de/s?k=Here+to+Slay",played:0,rating:0},
+  {name:"Die Rote Kathedrale",publisher:"Maldito Games / Spielworxx",year:2021,minPlayers:2,maxPlayers:4,duration:75,type:"Strategie",age:10,price:40,desc:"Baut die Basilius-Kathedrale in Moskau. Wählt eure Würfel klug, sichert euch Zonen und verwaltet Ressourcen. Elegantes Eurogate-Strategiespiel.",image:"https://www.spielworxx.de/wp-content/uploads/2021/01/Rote-Kathedrale-3D-freigestellt.jpg",shop:"https://www.amazon.de/s?k=Die+Rote+Kathedrale+Brettspiel",played:0,rating:0},
+  {name:"Kartograph",publisher:"Thunderworks Games / Pegasus",year:2019,minPlayers:1,maxPlayers:100,duration:30,type:"Roll & Write",age:10,price:15,desc:"Zeichnet auf eurer eigenen Karte Landschaften ein. Karten bestimmen die Formen, ihr entscheidet die Platzierung. Entspannt, solo tauglich, genialer Puzzle-Genuss.",image:"https://www.pegasus.de/media/catalog/product/5/1/51310g_box_right_300dpi_freigestellt.png",shop:"https://www.amazon.de/dp/B07WKWQ8KD",played:0,rating:0},
+  {name:"Die Kartographin",publisher:"Thunderworks Games / Pegasus",year:2023,minPlayers:1,maxPlayers:100,duration:30,type:"Roll & Write",age:10,price:15,desc:"Eigenständige Fortsetzung von Kartograph mit neuen Terrains, Jahreszeiten-Zielen und verbesserter Solo-Variante. Vollständig spielbar ohne Vorgänger.",image:"https://www.pegasus.de/media/catalog/product/5/1/51315g_box_right_300dpi_freigestellt.png",shop:"https://www.amazon.de/s?k=Die+Kartographin+Brettspiel",played:0,rating:0},
+  {name:"Halli Galli",publisher:"Amigo",year:1990,minPlayers:2,maxPlayers:6,duration:15,type:"Party",age:6,price:10,desc:"Blitzschnelles Reaktionsspiel: Sobald genau 5 gleiche Früchte offen liegen, läutet ihr die Glocke. Wer am schnellsten ist, bekommt die Karten. Zeitloser Klassiker.",image:"https://www.amigo-spiele.de/media/catalog/product/h/a/halli-galli_3d-box_2022.jpg",shop:"https://www.amazon.de/dp/B001IVFZBS",played:0,rating:0},
+  {name:"Robo Chaos",publisher:"Kosmos",year:2022,minPlayers:2,maxPlayers:4,duration:20,type:"Party",age:8,price:20,desc:"Programmiert eure Roboter gleichzeitig und schickt sie los – aber Achtung, alle bewegen sich nach denselben Karten! Hektischer, lustiger Familienspiel-Chaos.",image:"https://www.kosmos.de/media/catalog/product/6/8/6830121_3d-packshot_freigestellt.jpg",shop:"https://www.amazon.de/s?k=Robo+Chaos+Kosmos",played:0,rating:0},
+  {name:"New York Zoo",publisher:"Feuerland Spiele",year:2020,minPlayers:1,maxPlayers:5,duration:45,type:"Strategie",age:7,price:38,desc:"Baut euren eigenen Zoo! Polyomino-Puzzle trifft Tierpflege – legt Gehege auf eurem persönlichen Board aus und füllt sie mit Tieren. Familienfreundlich und clever.",image:"https://feuerland-spiele.de/media/catalog/product/n/e/new-york-zoo_3d-box_2020.jpg",shop:"https://www.amazon.de/dp/B08CQGM1WC",played:0,rating:0},
+  {name:"Nova Luna",publisher:"Spielworxx / Pegasus",year:2019,minPlayers:1,maxPlayers:4,duration:30,type:"Strategie",age:8,price:32,desc:"Legt Mondphasen-Plättchen aus und setzt Marker auf erfüllte Aufgaben. Wer als Erster alle 20 Marker gesetzt hat, gewinnt. Pures Lege-Taktikspiel.",image:"https://www.pegasus.de/media/catalog/product/5/9/59050g_box_right_300dpi_freigestellt.png",shop:"https://www.amazon.de/dp/B08H3LFXBT",played:0,rating:0},
+  {name:"Frantic",publisher:"Helvetiq",year:2018,minPlayers:2,maxPlayers:8,duration:30,type:"Karten",age:12,price:18,desc:"Das brutalere, schweizer UNO: Aktionskarten mit extremen Effekten wie 'alle ziehen 10' oder 'Hände tauschen'. Kurzweilig, gemein und sehr unterhaltsam.",image:"https://helvetiq.com/wp-content/uploads/2018/01/frantic_box_3d.png",shop:"https://www.amazon.de/s?k=Frantic+Kartenspiel+Helvetiq",played:0,rating:0},
+  {name:"Fitzek: Killer Cruise",publisher:"Kosmos",year:2023,minPlayers:1,maxPlayers:4,duration:90,type:"Detektiv",age:16,price:35,desc:"Kooperatives Krimi-Deduktionsspiel nach Sebastian Fitzeks Thriller. Löst auf einem Kreuzfahrtschiff einen Mordfall durch Kombinieren von Hinweiskarten.",image:"https://www.kosmos.de/media/catalog/product/6/8/6830182_3d-packshot_freigestellt.jpg",shop:"https://www.amazon.de/s?k=Fitzek+Killer+Cruise+Kosmos",played:0,rating:0},
+  {name:"Fitzek: Safe House",publisher:"Kosmos",year:2022,minPlayers:1,maxPlayers:4,duration:90,type:"Detektiv",age:16,price:35,desc:"Kooperatives Fitzek-Krimi-Erlebnis: Ihr seid in einem Sicheren Haus eingesperrt und müsst entkommen, bevor der Täter euch findet. Kartenbasiertes Ermitteln.",image:"https://www.kosmos.de/media/catalog/product/6/8/6830159_3d-packshot_freigestellt.jpg",shop:"https://www.amazon.de/s?k=Fitzek+Safe+House+Kosmos",played:0,rating:0},
+  {name:"Würfel König",publisher:"Drei Hasen in der Abendsonne",year:2019,minPlayers:2,maxPlayers:5,duration:20,type:"Würfel",age:8,price:16,desc:"Würfelt und baut euer Königreich auf. Sammelt Ressourcen, errichtet Gebäude und punktet durch kluge Planung. Schnelles Familienspiel mit Roll & Write Elementen.",image:"https://www.dreihasen.de/wp-content/uploads/2019/08/Wuerfel_Koenig_3D.jpg",shop:"https://www.amazon.de/s?k=W%C3%BCrfel+K%C3%B6nig+Brettspiel",played:0,rating:0},
+  {name:"My Park",publisher:"Schmidt Spiele",year:2022,minPlayers:1,maxPlayers:4,duration:45,type:"Roll & Write",age:8,price:25,desc:"Entwerft euren eigenen Nationalpark: Zeichnet Wege, platziert Tiere und Gebäude auf euren persönlichen Parkplan-Bögen. Kooperativer Roll & Write Spaß.",image:"https://www.schmidtspiele.de/files/produkte/4-99-0014_my-park_produktbild.jpg",shop:"https://www.amazon.de/s?k=My+Park+Schmidt+Spiele",played:0,rating:0},
+  {name:"Santorini",publisher:"Roxley / Pegasus",year:2016,minPlayers:2,maxPlayers:4,duration:20,type:"Strategie",age:8,price:40,desc:"Abstraktes Strategiespiel auf einer griechischen Insel: Baut Türme und klettert höher als die Gegner. Wunderschönes 3D-Spielmaterial, tiefgründige Taktik.",image:"https://www.pegasus.de/media/catalog/product/5/1/51225g_box_right_300dpi_freigestellt.png",shop:"https://www.amazon.de/dp/B01IBXNPIK",played:0,rating:0},
+  {name:"Sky Team",publisher:"Scorpion Masqué / Kosmos",year:2023,minPlayers:2,maxPlayers:2,duration:20,type:"Kooperativ",age:12,price:35,desc:"Einer ist Pilot, einer Kopilot – landet das Flugzeug sicher, ohne zu reden, nur durch cleveres Platzieren eurer Würfel. Intensiv, spannend. Spiel des Jahres 2024.",image:"https://www.kosmos.de/media/catalog/product/6/8/6830218_3d-packshot_freigestellt.jpg",shop:"https://www.amazon.de/dp/B0CJZM25GF",played:0,rating:0},
+  {name:"MicroMacro: Crime City 2 – Full House",publisher:"Edition Spielwiese / Pegasus",year:2021,minPlayers:1,maxPlayers:4,duration:15,type:"Detektiv",age:10,price:25,desc:"Zweite eigenständige MicroMacro-Episode mit 16 neuen Fällen auf einem komplett neuen Stadtplan. Fälle sind nun nach Inhaltswarnungen sortiert, komplexer als Teil 1.",image:"https://www.pegasus.de/media/catalog/product/5/9/59061g_box_right_300dpi_freigestellt.png",shop:"https://www.amazon.de/dp/B09M4NQXWQ",played:0,rating:0},
+  {name:"DOG",publisher:"Schmidt Spiele",year:2002,minPlayers:2,maxPlayers:6,duration:60,type:"Party",age:8,price:30,desc:"Spielt Karten, um eure Hunde ins Ziel zu schicken – verschiebt, tauscht oder blockiert mit Partnern. Teamvariante für 4 oder 6 Spieler. Strategischer Klassiker.",image:"https://www.schmidtspiele.de/files/produkte/4-51243_dog_produktbild.jpg",shop:"https://www.amazon.de/dp/B0007YJMQG",played:0,rating:0},
+  {name:"Mr. Jack",publisher:"Hurrican / Asmodee",year:2006,minPlayers:2,maxPlayers:2,duration:30,type:"Detektiv",age:9,price:30,desc:"Asymmetrisches Duell in London: Jack the Ripper versucht zu entkommen, der Detektiv versucht ihn zu stellen. Taktisches 2-Spieler-Deduktionsspiel.",image:"https://www.asmodee.de/fileadmin/asmodee_products/de/games/mr-jack/MJ01ML_MrJack_3Dbox.jpg",shop:"https://www.amazon.de/s?k=Mr+Jack+Hurrican",played:0,rating:0},
+  {name:"Dungeons, Dice & Danger",publisher:"Feuerland Spiele",year:2020,minPlayers:1,maxPlayers:4,duration:30,type:"Roll & Write",age:10,price:20,desc:"Erkundet Dungeons mit Würfeln und zeichnet eure Route auf individuelle Verlieskarten. Löst Schätze frei und entkommt den Monstern. Spaßiger Roll & Write Dungeon.",image:"https://feuerland-spiele.de/media/catalog/product/d/u/dungeons-dice-danger_3d-box_2020.jpg",shop:"https://www.amazon.de/dp/B087YBPQXK",played:0,rating:0},
+  {name:"Overbooked",publisher:"Game Factory",year:2022,minPlayers:2,maxPlayers:5,duration:30,type:"Party",age:10,price:20,desc:"Echtzeit-Kooperativspiel: Managt als Team ein überbuchtes Hotel und weist Gäste korrekt zu. Alle spielen gleichzeitig – chaotisch, witzig, herausfordernd.",image:"https://www.game-factory.de/media/catalog/product/o/v/overbooked_box_3d.jpg",shop:"https://www.amazon.de/s?k=Overbooked+Game+Factory",played:0,rating:0},
+  {name:"Escape Tales: The Awakening",publisher:"Board&Dice",year:2018,minPlayers:1,maxPlayers:4,duration:180,type:"Escape",age:16,price:35,desc:"Narratives Escape-Room-Erlebnis mit App-Unterstützung: Erkundet 40+ Räume, löst Rätsel und trefft Entscheidungen, die die Geschichte formen. Mehrspielbar.",image:"https://boardanddice.com/wp-content/uploads/2018/05/EscapeTales_3Dbox.jpg",shop:"https://www.amazon.de/s?k=Escape+Tales+Awakening",played:0,rating:0},
+  {name:"Stillsee – Ein einzigartiges Detektivspiel",publisher:"Kosmos",year:2023,minPlayers:1,maxPlayers:4,duration:120,type:"Detektiv",age:14,price:30,desc:"Löst ein Verschwinden rund um einen geheimnisvollen See. Kooperative Spurensuche mit Karten, Verhören und atmosphärischem Krimicharakter.",image:"https://www.kosmos.de/media/catalog/product/6/8/6830210_3d-packshot_freigestellt.jpg",shop:"https://www.amazon.de/s?k=Stillsee+Detektivspiel+Kosmos",played:0,rating:0},
+  {name:"Dorfromantik – Das Brettspiel",publisher:"Pegasus Spiele",year:2022,minPlayers:1,maxPlayers:6,duration:60,type:"Kooperativ",age:8,price:40,desc:"Legt gemeinsam Landschaftsplättchen um möglichst viele Punkte zu erzielen. Basiert auf dem Videospiel. Entspannend, kooperativ, mit freischaltbarer Kampagne. Spiel des Jahres 2023.",image:"https://www.pegasus.de/media/catalog/product/5/1/51240g_box_right_300dpi_freigestellt.png",shop:"https://www.amazon.de/dp/B09QFXQWXF",played:0,rating:0},
+  {name:"Flügelschlag",publisher:"Stonemaier Games / Feuerland Spiele",year:2019,minPlayers:1,maxPlayers:5,duration:90,type:"Strategie",age:10,price:55,desc:"Preisgekröntes Tableau-Builder-Spiel: Sammelt Vögel mit einzigartigen Fähigkeiten in drei Lebensräumen. Herausragende Illustrationen. Kennerspiel des Jahres 2019.",image:"https://feuerland-spiele.de/media/catalog/product/f/l/fluegelschlag_3d-box_2019.jpg",shop:"https://www.amazon.de/dp/B07MNVLKPS",played:0,rating:0},
+  {name:"Paleo",publisher:"Hans im Glück",year:2020,minPlayers:2,maxPlayers:4,duration:75,type:"Kooperativ",age:10,price:45,desc:"Kooperatives Steinzeit-Überlebensspiel: Deckt Karten auf, sammelt Ressourcen und baut das Mammut-Gemälde – aber riskiert nicht zu viel! Kennerspiel des Jahres 2021.",image:"https://www.hans-im-glueck.de/media/catalog/product/p/a/paleo_3d-box_2020.jpg",shop:"https://www.amazon.de/dp/B08NSF6HBV",played:0,rating:0},
+  {name:"Bluff",publisher:"FoxMind / Ravensburger",year:1993,minPlayers:2,maxPlayers:6,duration:20,type:"Würfel",age:8,price:20,desc:"Schüttelt Würfelbecher, macht Gebote – wer lügt am besten? Bluff (auch Perudo) ist ein zeitloser Klassiker über Täuschung, Risiko und Psychologie.",image:"https://www.ravensburger.de/shop/spielen/familienspiele/bluff-272709/27270.html",shop:"https://www.amazon.de/s?k=Bluff+Würfelspiel+Ravensburger",played:0,rating:0},
+  {name:"My Island",publisher:"Kosmos",year:2022,minPlayers:2,maxPlayers:4,duration:30,type:"Roll & Write",age:8,price:30,desc:"Episches Legacy-Legespiel: Eure Insel verändert sich über 24 Spielabende dauerhaft. Neue Regeln und Plättchen werden freigeschaltet. Mittelleichtes Legacy-Erlebnis.",image:"https://www.kosmos.de/media/catalog/product/6/8/6830151_3d-packshot_freigestellt.jpg",shop:"https://www.amazon.de/dp/B09ZTPBZ1L",played:0,rating:0},
+  {name:"Investigation Files – Mord in Berlin",publisher:"Kosmos",year:2022,minPlayers:1,maxPlayers:4,duration:60,type:"Detektiv",age:14,price:28,desc:"Löst einen Mordfall in Berlin durch Kombinieren von Zeitungsausschnitten, Fotos und Indizien. Kooperatives Krimi-Kartenspiel mit hohem Atmosphärefaktor.",image:"https://www.kosmos.de/media/catalog/product/6/8/6830165_3d-packshot_freigestellt.jpg",shop:"https://www.amazon.de/s?k=Investigation+Files+Mord+Berlin",played:0,rating:0},
+  {name:"Robinson Crusoe – Abenteuer auf der verfluchten Insel",publisher:"Portal Games / Pegasus",year:2012,minPlayers:1,maxPlayers:4,duration:120,type:"Kooperativ",age:14,price:60,desc:"Überlebt auf einer verfluchten Insel: Baut Lager, erkundet, kämpft gegen Wetter und Bestien. Eines der tiefsten und fordernsten kooperativen Abenteuerspiele überhaupt.",image:"https://www.pegasus.de/media/catalog/product/5/1/51945g_box_right_300dpi_freigestellt.png",shop:"https://www.amazon.de/dp/B08LFXVZH6",played:0,rating:0},
+  {name:"Das Original Malefiz-Spiel",publisher:"Ravensburger",year:1960,minPlayers:2,maxPlayers:4,duration:45,type:"Party",age:6,price:22,desc:"Setzt Sperrsteine, um Gegner zu blockieren, und bringt als Erster alle 5 Figuren ins Ziel. Ravensburger-Klassiker seit über 60 Jahren.",image:"https://m.media-amazon.com/images/I/71oaxdLp+yL._AC_SL1500_.jpg",shop:"https://www.amazon.de/dp/B000FFCCHQ",played:0,rating:0},
+  {name:"Die Patin",publisher:"Kosmos",year:2021,minPlayers:2,maxPlayers:5,duration:75,type:"Strategie",age:16,price:40,desc:"Baut euer Mafia-Imperium in der Stadt auf. Schließt Deals, übt Druck aus und täuscht Mitbewerber. Strategisches Deduktionsspiel mit viel Interaktion.",image:"https://www.kosmos.de/media/catalog/product/6/8/6830104_3d-packshot_freigestellt.jpg",shop:"https://www.amazon.de/s?k=Die+Patin+Kosmos+Brettspiel",played:0,rating:0},
+  {name:"Castle Combo",publisher:"25th Century Games",year:2023,minPlayers:1,maxPlayers:4,duration:20,type:"Karten",age:8,price:20,desc:"Baut euer Schloss durch Karten-Drafting aus einem Marktauslage. Jede Karte triggert Combo-Effekte mit anderen. Schnell erklärbar, taktisch überraschend tief.",image:"https://m.media-amazon.com/images/I/81F5b6rXM5L._AC_SL1500_.jpg",shop:"https://www.amazon.de/s?k=Castle+Combo+Brettspiel",played:0,rating:0},
+  {name:"Carp City",publisher:"Game Brewer",year:2022,minPlayers:1,maxPlayers:4,duration:60,type:"Strategie",age:10,price:35,desc:"Baut eine Stadt am Fluss für anthropomorphe Karpfen-Bewohner. Städtebau-Eurogame mit Worker Placement und Polyomino-Elementen.",image:"https://m.media-amazon.com/images/I/91jCRcK+HwL._AC_SL1500_.jpg",shop:"https://www.amazon.de/s?k=Carp+City+Brettspiel",played:0,rating:0},
+  {name:"Bomb Busters",publisher:"Pegasus Spiele",year:2024,minPlayers:2,maxPlayers:5,duration:20,type:"Kooperativ",age:10,price:28,desc:"Entschärft gemeinsam Bomben durch schnelle, klare Kommunikation. Jeder sieht nur seine eigenen Kabel – Teamarbeit entscheidet. Spiel des Jahres 2025.",image:"https://www.pegasus.de/media/catalog/product/5/1/51241g_box_right_300dpi_freigestellt.png",shop:"https://www.amazon.de/s?k=Bomb+Busters+Pegasus",played:0,rating:0},
+  {name:"Azul",publisher:"Plan B Games / Pegasus",year:2017,minPlayers:2,maxPlayers:4,duration:45,type:"Strategie",age:8,price:35,desc:"Legt Mosaikfliesen in euren Palast und vermeidet überschüssige Plättchen. Elegantes Drafting-Spiel mit wunderschönem Spielmaterial. Spiel des Jahres 2018.",image:"https://www.pegasus.de/media/catalog/product/5/4/54801g_box_right_300dpi_freigestellt.png",shop:"https://www.amazon.de/dp/B07657HBP9",played:0,rating:0},
+  {name:"Escape the Box – Der verfolgte Sherlock",publisher:"Huch! Verlag",year:2023,minPlayers:2,maxPlayers:5,duration:60,type:"Escape",age:12,price:30,desc:"Sherlock Holmes wird verfolgt und muss entkommen. Löst Rätsel auf Karten und Kartonteilen in diesem Box-Escape-Spiel. Mehrere Abende Spielmaterial inklusive.",image:"https://m.media-amazon.com/images/I/81aSaRRpq0L._AC_SL1500_.jpg",shop:"https://www.amazon.de/s?k=Escape+the+Box+Sherlock",played:0,rating:0},
+  {name:"Hidden Stones",publisher:"Piatnik",year:2022,minPlayers:2,maxPlayers:6,duration:25,type:"Karten",age:8,price:15,desc:"Versteckte Informationen und taktisches Sammeln: Schätzt die Steine der Mitspieler und sammelt die wertvollsten. Schnelles Gedächtniskartenspiel.",image:"https://m.media-amazon.com/images/I/71mEqeG55ML._AC_SL1500_.jpg",shop:"https://www.amazon.de/s?k=Hidden+Stones+Piatnik",played:0,rating:0},
+  {name:"Dominoes",publisher:"Verschiedene",year:1800,minPlayers:2,maxPlayers:4,duration:20,type:"Party",age:6,price:10,desc:"Klassisches Steineverbinden: Legt Dominosteine mit passenden Zahlen aneinander. Zeitloser Familienspaß, überall auf der Welt gespielt.",image:"https://m.media-amazon.com/images/I/71JHr8H3-7L._AC_SL1500_.jpg",shop:"https://www.amazon.de/s?k=Domino+Spiel+Holz",played:0,rating:0},
+  {name:"That's not a Hat",publisher:"Ravensburger",year:2023,minPlayers:3,maxPlayers:8,duration:15,type:"Party",age:8,price:12,desc:"Gebt Karten mit behaupteten Geschenken weiter – wer das Gemurmel nicht mehr versteht, nimmt Strafkarten. Bluffparty mit Wortspiel und viel Gelächter.",image:"https://m.media-amazon.com/images/I/71P-mHJR3OL._AC_SL1500_.jpg",shop:"https://www.amazon.de/dp/B0BT9BKZFZ",played:0,rating:0},
+  {name:"Camel Up",publisher:"Eggertspiele / Pegasus",year:2014,minPlayers:2,maxPlayers:8,duration:30,type:"Party",age:8,price:30,desc:"Wettet auf sich übereinanderstapelnde Wüstenkamele. Die Pyramiden-Würfelmaschine sorgt für unvorhersehbares Renn-Chaos. Spiel des Jahres 2014.",image:"https://www.pegasus.de/media/catalog/product/5/7/57702g_box_right_300dpi_freigestellt.png",shop:"https://www.amazon.de/dp/B00JA6SRDM",played:0,rating:0},
+  {name:"Living Forest",publisher:"Lumis / Pegasus",year:2021,minPlayers:1,maxPlayers:4,duration:40,type:"Strategie",age:10,price:40,desc:"Schützt als Waldgeist den heiligen Wald vor dem Feuerdämon Onibi. Deckbau trifft Symbole mit drei möglichen Siegbedingungen. Kennerspiel des Jahres 2022.",image:"https://www.pegasus.de/media/catalog/product/5/1/51220g_box_right_300dpi_freigestellt.png",shop:"https://www.amazon.de/dp/B09N79HRYH",played:0,rating:0},
+  {name:"Istanbul – Big Box",publisher:"Pegasus Spiele",year:2018,minPlayers:2,maxPlayers:5,duration:60,type:"Strategie",age:10,price:55,desc:"Bewegt euren Händler mit Gehilfen durch den Bazaar-Spielplan von Istanbul. Alle Erweiterungen im Big Box. Sammelt Rubine und gewinnt. Elegantes Worker-Placement.",image:"https://www.pegasus.de/media/catalog/product/5/1/51991g_box_right_300dpi_freigestellt.png",shop:"https://www.amazon.de/dp/B07FPJQ4QK",played:0,rating:0},
+  {name:"Mystery House – Das 3D Escape-Abenteuer",publisher:"Giochi Uniti / Asmodee",year:2020,minPlayers:1,maxPlayers:5,duration:60,type:"Escape",age:12,price:35,desc:"3D-Haus-Box mit App-Unterstützung: Öffnet Schachteln, findet Gegenstände und löst Rätsel in Echtzeit. Einzigartiges physisches Escape-Erlebnis.",image:"https://www.asmodee.de/fileadmin/asmodee_products/de/games/mystery-house/GU566_MysteryHouse_3Dbox.jpg",shop:"https://www.amazon.de/dp/B086QLZNZD",played:0,rating:0},
+  {name:"Elfer Raus!",publisher:"Ravensburger",year:1987,minPlayers:2,maxPlayers:6,duration:30,type:"Karten",age:6,price:12,desc:"Legt Karten von der Elf aus aufsteigend und absteigend ab – wer als Erster alle Karten los ist, gewinnt. Bewährter Familienkartenspiel-Klassiker.",image:"https://m.media-amazon.com/images/I/81l-7Oa7oJL._AC_SL1500_.jpg",shop:"https://www.amazon.de/dp/B07P69MN5Y",played:0,rating:0},
+  {name:"Escape Room – In der Hand des Entführers",publisher:"Identity Games",year:2017,minPlayers:3,maxPlayers:5,duration:60,type:"Escape",age:16,price:25,desc:"Löst in 60 Minuten den Fall: Wer entführt die Kinder? Mit Decoder-System und codierten Hinweiskarten. Das Original Escape Room Brettspiel mit mehreren Abenteuern.",image:"https://m.media-amazon.com/images/I/81OiDXZRQtL._AC_SL1000_.jpg",shop:"https://www.amazon.de/dp/B077X3X4GL",played:0,rating:0},
+  {name:"Escape Room 2 – Das Spiel",publisher:"Identity Games",year:2018,minPlayers:3,maxPlayers:5,duration:60,type:"Escape",age:16,price:25,desc:"Fortsetzung des originalen Escape Room Spiels mit neuen Abenteuern und Decoder-System. Ebenfalls 60 Minuten Echtzeit-Spannung in einer Box.",image:"https://m.media-amazon.com/images/I/81XwwbPOZeL._AC_SL1500_.jpg",shop:"https://www.amazon.de/dp/B07GRBCW6X",played:0,rating:0},
+  {name:"Make 'n' Break",publisher:"Ravensburger",year:2004,minPlayers:2,maxPlayers:10,duration:20,type:"Party",age:7,price:30,desc:"Baut Bauklötzchen-Strukturen nach Bildkarten gegen die Uhr – und reißt sie dann wieder ein. Hektischer Familienspaß für viele Spieler.",image:"https://m.media-amazon.com/images/I/71UJq5UOFnL._AC_SL1000_.jpg",shop:"https://www.amazon.de/s?k=Make+n+Break+Ravensburger",played:0,rating:0},
+  {name:"6 Nimmt!",publisher:"Amigo",year:1994,minPlayers:2,maxPlayers:10,duration:45,type:"Karten",age:8,price:10,desc:"Spielt Karten auf vier Reihen – wer die sechste legt, nimmt alle. Vermeidet Ochsen-Punkte. Schneller Klassiker für bis zu 10 Spieler.",image:"https://www.amigo-spiele.de/media/catalog/product/6/n/6-nimmt_3d-box_2021.jpg",shop:"https://www.amazon.de/dp/B001EBXMFG",played:0,rating:0},
+  {name:"Kribbeln",publisher:"NSV",year:2022,minPlayers:2,maxPlayers:6,duration:20,type:"Würfel",age:8,price:12,desc:"Roll & Write mit Nervenkitzel: Würfelt Symbole und kreuzt Felder auf euren Bögen an – aber pusht nicht zu weit! Spannendes Drück-dein-Glück.",image:"https://m.media-amazon.com/images/I/71eIrYv4GZL._AC_SL1500_.jpg",shop:"https://www.amazon.de/s?k=Kribbeln+NSV+Spiel",played:0,rating:0},
+  {name:"Bis 20!",publisher:"Amigo",year:2019,minPlayers:2,maxPlayers:10,duration:10,type:"Karten",age:6,price:8,desc:"Addiert Karten gemeinsam – nie über 20 kommen. Schnell erklärt, zügig gespielt. Ideal als Einstieg oder Aufwärmspiel.",image:"https://www.amigo-spiele.de/media/catalog/product/b/i/bis-20_3d-box.jpg",shop:"https://www.amazon.de/s?k=Bis+20+Amigo+Kartenspiel",played:0,rating:0},
+  {name:"Palm Island",publisher:"Portal Dragon",year:2018,minPlayers:1,maxPlayers:2,duration:15,type:"Solo",age:10,price:15,desc:"Entwickelt eure Insel solo mit nur 17 Karten. Dreht und dreht Karten um Ressourcen zu produzieren und Gebäude zu bauen. Passt in jede Hosentasche.",image:"https://m.media-amazon.com/images/I/71LTlG6H1QL._AC_SL1500_.jpg",shop:"https://www.amazon.de/s?k=Palm+Island+Kartenspiel",played:0,rating:0},
+  {name:"Escape the Room – Dr. Gravelys Refugium",publisher:"Think Fun / Ravensburger",year:2017,minPlayers:3,maxPlayers:8,duration:90,type:"Escape",age:13,price:25,desc:"Großes Escape-Room-Erlebnis für die ganze Familie mit illustrierten Szenen-Büchlet und Rätsel-Umschlägen. Für bis zu 8 Spieler geeignet.",image:"https://m.media-amazon.com/images/I/81GcqzT13fL._AC_SL1500_.jpg",shop:"https://www.amazon.de/s?k=Escape+the+Room+Dr+Gravely",played:0,rating:0},
+  {name:"Level 8 Master",publisher:"Ravensburger",year:2012,minPlayers:2,maxPlayers:6,duration:60,type:"Karten",age:8,price:12,desc:"Erweiterte Version von Level 8: Sammelt Karten für acht vorgegebene Kombinationen in Folge. Mit Master-Erweiterung für mehr Strategietiefe und Abwechslung.",image:"https://m.media-amazon.com/images/I/71pnOLxjxpL._AC_SL1500_.jpg",shop:"https://www.amazon.de/s?k=Level+8+Master+Ravensburger",played:0,rating:0},
+  {name:"Deckscape – Der Test",publisher:"dV Giochi / Abacusspiele",year:2017,minPlayers:1,maxPlayers:6,duration:30,type:"Escape",age:12,price:10,desc:"Escape-Room im Kartenspiel-Format: 60 Karten, keine Schnipsel, kein Einmal-Erlebnis. Der Einstieg in die Deckscape-Serie – günstig und überraschend gut.",image:"https://m.media-amazon.com/images/I/81tkNk7-eaL._AC_SL1500_.jpg",shop:"https://www.amazon.de/s?k=Deckscape+Der+Test",played:0,rating:0},
+  {name:"Das Spiel des Lebens – Kartenspiel",publisher:"Hasbro",year:2010,minPlayers:2,maxPlayers:4,duration:20,type:"Karten",age:8,price:12,desc:"Kartenversion des Brettspiel-Klassikers: Trefft Lebensentscheidungen durch Karten. Schneller und kompakter als das Original, für unterwegs geeignet.",image:"https://m.media-amazon.com/images/I/81HLNHCKEsL._AC_SL1500_.jpg",shop:"https://www.amazon.de/s?k=Spiel+des+Lebens+Kartenspiel",played:0,rating:0},
+  {name:"Sherlock – 13 Geiseln",publisher:"Iello",year:2019,minPlayers:2,maxPlayers:8,duration:30,type:"Detektiv",age:10,price:18,desc:"Deduziert per Kartenabfrage, wer der Entführer ist. Schnelles Deduktions-Kartenspiel: Fragt clever, schlussfolgert richtig. Für bis zu 8 Spieler.",image:"https://iellousa.com/cdn/shop/products/13clues_box_top.jpg",shop:"https://www.amazon.de/s?k=Sherlock+13+Geiseln+Iello",played:0,rating:0},
+  {name:"Escape Dysturbia",publisher:"Huch! Verlag",year:2019,minPlayers:2,maxPlayers:5,duration:60,type:"Escape",age:12,price:28,desc:"Escape-Room in einer dystopischen Welt: Löst Rätsel auf Karten, findet Codes und entkommt dem System. Packende Handlung, gute Rätselqualität.",image:"https://m.media-amazon.com/images/I/81YkSW-L8hL._AC_SL1500_.jpg",shop:"https://www.amazon.de/s?k=Escape+Dysturbia",played:0,rating:0},
+  {name:"Crime Story – Das Detektiv-Spiel",publisher:"Kosmos",year:2020,minPlayers:2,maxPlayers:6,duration:45,type:"Detektiv",age:12,price:25,desc:"Ermittelt durch Kombinieren von Bild-Karten: Welche Karten zusammen gehören, enthüllt die Wahrheit. Kooperatives Deduktionsspiel für die ganze Familie.",image:"https://www.kosmos.de/media/catalog/product/6/8/6830087_3d-packshot_freigestellt.jpg",shop:"https://www.amazon.de/s?k=Crime+Story+Detektiv+Kosmos",played:0,rating:0},
+  {name:"Escape Room – Das Spiel",publisher:"Identity Games",year:2016,minPlayers:3,maxPlayers:5,duration:60,type:"Escape",age:16,price:30,desc:"Das Original-Escape-Room-Brettspiel mit Decoder-System und vier Abenteuern. Löst Rätsel in 60 Minuten. Für Einsteiger und Fortgeschrittene.",image:"https://m.media-amazon.com/images/I/81QFWUBOgKL._AC_SL1500_.jpg",shop:"https://www.amazon.de/dp/B077X3X4GL",played:0,rating:0},
+  {name:"Kitchen Rush",publisher:"Alderac / Asmodee",year:2017,minPlayers:1,maxPlayers:4,duration:30,type:"Kooperativ",age:8,price:40,desc:"Echtzeit-Kooperativspiel: Betreibt ein Restaurant, nehmt Bestellungen an, kocht und serviert – alles mit Sanduhr-Timern gleichzeitig. Hektisch und genial.",image:"https://www.asmodee.de/fileadmin/asmodee_products/de/games/kitchen-rush/AEG7044_KitchenRush_3Dbox.jpg",shop:"https://www.amazon.de/dp/B07NXNXLWJ",played:0,rating:0},
+  {name:"Spirit Island",publisher:"Greater Than Games / Feuerland",year:2017,minPlayers:1,maxPlayers:4,duration:120,type:"Kooperativ",age:13,price:65,desc:"Spielt als mächtige Geister und vertreibt Eindringlinge von eurer heiligen Insel. Hochkomplexes, asymmetrisches Kooperativspiel. Eines der höchstbewerteten Spiele.",image:"https://feuerland-spiele.de/media/catalog/product/s/p/spirit-island_3d-box_2017.jpg",shop:"https://www.amazon.de/dp/B083XFLJJL",played:0,rating:0},
+  {name:"Detective – Ein Krimi-Brettspiel",publisher:"Portal Games / Pegasus",year:2018,minPlayers:1,maxPlayers:5,duration:180,type:"Detektiv",age:16,price:50,desc:"Modernes Ermittlungsspiel mit echter Online-Datenbank: Durchsucht ANTARES, verhört Zeugen und schließt Fälle ab. Tiefes narratives Erlebnis.",image:"https://www.pegasus.de/media/catalog/product/5/7/57505g_box_right_300dpi_freigestellt.png",shop:"https://www.amazon.de/dp/B07QWKFNVL",played:0,rating:0},
+  {name:"Catania – Das Duell",publisher:"Kosmos",year:2022,minPlayers:2,maxPlayers:2,duration:30,type:"Strategie",age:10,price:18,desc:"Die schnelle 2-Spieler-Version von Catan: Handelt, baut und kämpft mit Karten statt Brett. Ideal für kurze Partien zu zweit.",image:"https://www.kosmos.de/media/catalog/product/6/8/6830147_3d-packshot_freigestellt.jpg",shop:"https://www.amazon.de/s?k=Catania+Das+Duell+Kosmos",played:0,rating:0},
+  {name:"Twister",publisher:"Hasbro",year:1966,minPlayers:2,maxPlayers:4,duration:20,type:"Party",age:6,price:15,desc:"Rechte Hand rot, linker Fuß grün – das Bewegungsspiel mit Körpereinsatz. Absoluter Partyklassiker seit über 50 Jahren.",image:"https://m.media-amazon.com/images/I/81WmBQ-D5SL._AC_SL1500_.jpg",shop:"https://www.amazon.de/dp/B00000DMFE",played:0,rating:0},
+  {name:"Jaipur",publisher:"Gameworks / Space Cowboys",year:2009,minPlayers:2,maxPlayers:2,duration:30,type:"Karten",age:12,price:18,desc:"Handelsspiel für exakt zwei: Kauft und verkauft Waren klug, sammelt Kamelherden. Einfach gelernt, schwer gemeistert. Eines der besten 2-Spieler-Spiele.",image:"https://m.media-amazon.com/images/I/71t08H7m9ML._AC_SL1500_.jpg",shop:"https://www.amazon.de/dp/B07BZQ6DWK",played:0,rating:0},
+  {name:"Monopoly Millionär",publisher:"Hasbro",year:2012,minPlayers:2,maxPlayers:4,duration:45,type:"Party",age:8,price:28,desc:"Neue Monopoly-Variante: Ziel ist es, als Erster Millionär zu werden – nicht alle anderen zu ruinieren. Schnelleres, frischeres Spielgefühl.",image:"https://m.media-amazon.com/images/I/81CGMbOifRL._AC_SL1500_.jpg",shop:"https://www.amazon.de/s?k=Monopoly+Million%C3%A4r",played:0,rating:0},
+  {name:"Monopoly Banking Ultra",publisher:"Hasbro",year:2014,minPlayers:2,maxPlayers:4,duration:60,type:"Party",age:8,price:40,desc:"Monopoly mit elektronischem Banking-Terminal: Kreditkarten statt Papiergeld, dazu neue Felder und Power-Karten. Modernes Monopoly-Erlebnis.",image:"https://m.media-amazon.com/images/I/81Gz4C+oSvL._AC_SL1500_.jpg",shop:"https://www.amazon.de/s?k=Monopoly+Banking+Ultra",played:0,rating:0},
+  {name:"Cluedo",publisher:"Hasbro / Ravensburger",year:1949,minPlayers:3,maxPlayers:6,duration:60,type:"Detektiv",age:8,price:20,desc:"Der Ur-Klassiker der Detektivspiele: Wer hat wen womit und wo ermordet? Deduktions-Brettspiel für die ganze Familie. Seit über 70 Jahren ein Evergreen.",image:"https://m.media-amazon.com/images/I/81Pw+5S-W7L._AC_SL1500_.jpg",shop:"https://www.amazon.de/s?k=Cluedo+Brettspiel",played:0,rating:0},
+  {name:"Wackelturm (Jenga)",publisher:"Verschiedene",year:1983,minPlayers:2,maxPlayers:6,duration:20,type:"Party",age:6,price:20,desc:"Zieht Holzklötzchen aus dem Turm und stapelt sie oben drauf – wer den Turm zum Einsturz bringt, verliert. Timeless Jenga-Klassiker.",image:"https://m.media-amazon.com/images/I/51E-XLkVgIL._AC_SL1000_.jpg",shop:"https://www.amazon.de/s?k=Wackelturm+Holz",played:0,rating:0},
+  {name:"Zombie Teenz Evolution",publisher:"Le Scorpion Masqué / Huch!",year:2020,minPlayers:2,maxPlayers:4,duration:15,type:"Kooperativ",age:8,price:20,desc:"Kooperatives Legacy-Spiel für Familien: Befreit die Stadt von Zombies und schaltet über mehrere Spielabende neue Fähigkeiten frei. Nachfolger von Zombie Kidz.",image:"https://m.media-amazon.com/images/I/91GRVX3GKIL._AC_SL1500_.jpg",shop:"https://www.amazon.de/dp/B08C9ZKKLW",played:0,rating:0},
 ];
 
-// ═══════════════════════════════════════════════════════
-// STATE
-// ═══════════════════════════════════════════════════════
-let games = [];
-let filters = { type: '', players: '', search: '' };
-let sortBy = 'name';
-let viewMode = 'grid'; // grid | list
-let editingId = null;
-let formRating = 0;
-let currentDetailId = null;
+// ── STATE ───────────────────────────────────────────────
+let games=[],filters={type:'',players:'',search:''},sortBy='name',viewMode='grid',editingId=null,formRating=0;
 
-// ═══════════════════════════════════════════════════════
-// INIT
-// ═══════════════════════════════════════════════════════
-async function init() {
-  db = await openDB();
-  let all = await getAll();
-  if (all.length === 0) {
-    for (const g of SEED) await putGame(g);
-    all = await getAll();
-  }
-  games = all;
-  document.getElementById('spinner').style.display = 'none';
-  document.getElementById('grid').style.display = 'grid';
-  render();
-  setupEvents();
+// ── INIT ────────────────────────────────────────────────
+async function init(){
+  db=await openDB();
+  let all=await getAll();
+  if(all.length===0){for(const g of SEED)await putGame(g);all=await getAll();}
+  games=all;
+  document.getElementById('spinner').style.display='none';
+  document.getElementById('grid').style.display='grid';
+  render();setupEvents();
 }
 
-// ═══════════════════════════════════════════════════════
-// RENDER
-// ═══════════════════════════════════════════════════════
-function getFiltered() {
-  let list = [...games];
-  if (filters.type) list = list.filter(g => g.type === filters.type);
-  if (filters.players) {
-    const n = parseInt(filters.players);
-    if (n === 1) list = list.filter(g => g.minPlayers === 1);
-    else if (n === 2) list = list.filter(g => g.minPlayers <= 2 && g.maxPlayers >= 2);
-    else if (n === 4) list = list.filter(g => g.maxPlayers >= 3 && g.maxPlayers <= 4);
-    else if (n === 6) list = list.filter(g => g.maxPlayers >= 5);
+// ── RENDER ──────────────────────────────────────────────
+function getFiltered(){
+  let list=[...games];
+  if(filters.type)list=list.filter(g=>g.type===filters.type);
+  if(filters.players){
+    const n=parseInt(filters.players);
+    if(n===1)list=list.filter(g=>g.minPlayers===1);
+    else if(n===2)list=list.filter(g=>g.minPlayers<=2&&g.maxPlayers>=2);
+    else if(n===4)list=list.filter(g=>g.maxPlayers>=3&&g.maxPlayers<=4);
+    else if(n===6)list=list.filter(g=>g.maxPlayers>=5);
   }
-  if (filters.search) {
-    const s = filters.search.toLowerCase();
-    list = list.filter(g => g.name.toLowerCase().includes(s) || (g.publisher||'').toLowerCase().includes(s) || (g.type||'').toLowerCase().includes(s));
-  }
-  list.sort((a, b) => {
-    switch(sortBy) {
-      case 'name': return a.name.localeCompare(b.name, 'de');
-      case 'name-desc': return b.name.localeCompare(a.name, 'de');
-      case 'rating': return (b.rating||0) - (a.rating||0);
-      case 'played': return (b.played||0) - (a.played||0);
-      case 'players': return (a.minPlayers||0) - (b.minPlayers||0);
-      case 'duration': return (a.duration||0) - (b.duration||0);
-      case 'price': return (a.price||0) - (b.price||0);
-      default: return 0;
+  if(filters.search){const s=filters.search.toLowerCase();list=list.filter(g=>g.name.toLowerCase().includes(s)||(g.publisher||'').toLowerCase().includes(s)||(g.type||'').toLowerCase().includes(s));}
+  list.sort((a,b)=>{
+    switch(sortBy){
+      case 'name':return a.name.localeCompare(b.name,'de');
+      case 'name-desc':return b.name.localeCompare(a.name,'de');
+      case 'rating':return(b.rating||0)-(a.rating||0);
+      case 'played':return(b.played||0)-(a.played||0);
+      case 'players':return(a.minPlayers||0)-(b.minPlayers||0);
+      case 'duration':return(a.duration||0)-(b.duration||0);
+      case 'price':return(a.price||0)-(b.price||0);
+      default:return 0;
     }
   });
   return list;
 }
 
-function stars(r, size='small') {
-  let h = '';
-  for (let i = 1; i <= 5; i++) h += `<span class="${i <= r ? 'filled' : 'empty'}">${i <= r ? '★' : '☆'}</span>`;
-  return `<div class="card-stars">${h}</div>`;
+function starsHtml(r){
+  let h='';for(let i=1;i<=5;i++)h+=`<span class="${i<=r?'filled':'empty'}">${i<=r?'★':'☆'}</span>`;
+  return`<div class="card-stars">${h}</div>`;
 }
 
-function render() {
-  const list = getFiltered();
-  const grid = document.getElementById('grid');
-  const empty = document.getElementById('empty-state');
-  document.getElementById('filterResults').textContent = `${list.length} Spiel${list.length !== 1 ? 'e' : ''}`;
-
-  // Stats
-  document.getElementById('statTotal').textContent = games.length;
-  const played = games.filter(g => g.played > 0);
-  document.getElementById('statPlayed').textContent = played.length;
-  const rated = games.filter(g => g.rating > 0);
-  document.getElementById('statRating').textContent = rated.length ? (rated.reduce((s,g) => s + g.rating, 0) / rated.length).toFixed(1) : '–';
-  const top = games.filter(g => g.played > 0).sort((a,b) => b.played - a.played)[0];
-  document.getElementById('statTop').textContent = top ? top.name.split(' ').slice(0,2).join(' ') : '–';
-
-  if (!list.length) {
-    grid.style.display = 'none';
-    empty.style.display = 'block';
-    return;
-  }
-  grid.style.display = viewMode === 'list' ? 'grid' : 'grid';
-  empty.style.display = 'none';
-
-  grid.innerHTML = list.map(g => {
-    const img = g.image ? `<img src="${g.image}" alt="${g.name}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-      <div class="card-cover-fallback" style="display:none"><div class="fallback-icon">🎲</div><div class="fallback-title">${g.name}</div></div>` :
-      `<div class="card-cover-fallback"><div class="fallback-icon">🎲</div><div class="fallback-title">${g.name}</div></div>`;
-    const ptext = g.minPlayers === g.maxPlayers ? `${g.minPlayers}P` : `${g.minPlayers}–${g.maxPlayers}P`;
-    return `<div class="game-card" data-id="${g.id}">
-      <div class="card-cover">
-        ${img}
-        ${g.rating > 0 ? `<div class="card-badge">★ ${g.rating}</div>` : ''}
-        ${g.played > 0 ? `<div class="card-played-badge">▶ ${g.played}×</div>` : ''}
-        <div class="card-overlay">
-          <div class="card-overlay-actions">
-            <button class="card-overlay-btn" data-action="play" data-id="${g.id}" title="Gespielt">▶</button>
-            <button class="card-overlay-btn" data-action="edit" data-id="${g.id}" title="Bearbeiten">✎</button>
-          </div>
-        </div>
-      </div>
-      <div class="card-body">
-        <div class="card-title">${g.name}</div>
-        <div class="card-meta">
-          <span class="card-players">👤 ${ptext}</span>
-          <span class="card-duration">${g.duration ? g.duration+'min' : ''}</span>
-        </div>
-        ${stars(g.rating || 0)}
-      </div>
-    </div>`;
-  }).join('');
+function imgEl(g,cls=''){
+  if(!g.image)return`<div class="card-cover-fallback${cls?` ${cls}`:''}"><div class="fallback-icon">🎲</div><div class="fallback-title">${g.name}</div></div>`;
+  return`<img src="${g.image}" alt="${g.name}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="card-cover-fallback" style="display:none"><div class="fallback-icon">🎲</div><div class="fallback-title">${g.name}</div></div>`;
 }
 
-// ═══════════════════════════════════════════════════════
-// DETAIL MODAL
-// ═══════════════════════════════════════════════════════
-function openDetail(id) {
-  const g = games.find(x => x.id === id);
-  if (!g) return;
-  currentDetailId = id;
-  const ptext = g.minPlayers === g.maxPlayers ? `${g.minPlayers} Spieler` : `${g.minPlayers}–${g.maxPlayers} Spieler`;
-  const imgEl = g.image ?
-    `<img src="${g.image}" alt="${g.name}" style="width:100%;height:100%;object-fit:cover" onerror="this.parentElement.innerHTML='<div class=detail-cover-fallback><div class=fallback-icon>🎲</div></div>'">` :
-    `<div class="detail-cover-fallback"><div class="fallback-icon">🎲</div></div>`;
+function render(){
+  const list=getFiltered();
+  const grid=document.getElementById('grid');
+  const empty=document.getElementById('empty-state');
+  document.getElementById('filterResults').textContent=`${list.length} Spiel${list.length!==1?'e':''}`;
+  document.getElementById('statTotal').textContent=games.length;
+  const played=games.filter(g=>g.played>0);
+  document.getElementById('statPlayed').textContent=played.length;
+  const rated=games.filter(g=>g.rating>0);
+  document.getElementById('statRating').textContent=rated.length?(rated.reduce((s,g)=>s+g.rating,0)/rated.length).toFixed(1):'–';
+  const top=games.filter(g=>g.played>0).sort((a,b)=>b.played-a.played)[0];
+  document.getElementById('statTop').textContent=top?top.name.split(' ').slice(0,2).join(' '):'–';
+  if(!list.length){grid.style.display='none';empty.style.display='block';return;}
+  grid.style.display='grid';empty.style.display='none';
+  const ptext=g=>g.minPlayers===g.maxPlayers?`${g.minPlayers}P`:`${g.minPlayers}–${g.maxPlayers}P`;
+  grid.innerHTML=list.map(g=>`<div class="game-card" data-id="${g.id}">
+    <div class="card-cover">
+      ${imgEl(g)}
+      ${g.rating>0?`<div class="card-badge">★ ${g.rating}</div>`:''}
+      ${g.played>0?`<div class="card-played-badge">▶ ${g.played}×</div>`:''}
+      <div class="card-overlay"><div class="card-overlay-actions">
+        <button class="card-overlay-btn" data-action="play" data-id="${g.id}" title="Gespielt">▶</button>
+        <button class="card-overlay-btn" data-action="edit" data-id="${g.id}" title="Bearbeiten">✎</button>
+      </div></div>
+    </div>
+    <div class="card-body">
+      <div class="card-title">${g.name}</div>
+      <div class="card-meta">
+        <span class="card-players">👤 ${ptext(g)}</span>
+        <span class="card-duration">${g.duration?g.duration+'min':''}</span>
+      </div>
+      ${starsHtml(g.rating||0)}
+    </div>
+  </div>`).join('');
+}
 
-  let starsHtml = '<div class="star-input" id="detailStars">';
-  for (let i = 1; i <= 5; i++) starsHtml += `<span data-v="${i}" class="${i <= (g.rating||0) ? 'active' : ''}">${i <= (g.rating||0) ? '★' : '☆'}</span>`;
-  starsHtml += '</div>';
-
-  document.getElementById('detailContent').innerHTML = `
+// ── DETAIL ──────────────────────────────────────────────
+function openDetail(id){
+  const g=games.find(x=>x.id===id);if(!g)return;
+  const ptext=g.minPlayers===g.maxPlayers?`${g.minPlayers} Spieler`:`${g.minPlayers}–${g.maxPlayers} Spieler`;
+  let si='<div class="star-input" id="detailStars">';
+  for(let i=1;i<=5;i++)si+=`<span data-v="${i}" class="${i<=(g.rating||0)?'active':''}">${i<=(g.rating||0)?'★':'☆'}</span>`;
+  si+='</div>';
+  const coverHtml=g.image
+    ?`<img src="${g.image}" alt="${g.name}" style="width:100%;height:100%;object-fit:cover" onerror="this.parentElement.innerHTML='<div class=detail-cover-fallback><div class=fallback-icon style=font-size:2rem;opacity:.4>🎲</div></div>'">`
+    :`<div class="detail-cover-fallback"><div class="fallback-icon" style="font-size:2rem;opacity:.4">🎲</div></div>`;
+  document.getElementById('detailContent').innerHTML=`
     <div class="detail-header">
-      <div class="detail-cover">${imgEl}</div>
+      <div class="detail-cover">${coverHtml}</div>
       <div class="detail-info">
         <div class="detail-title">${g.name}</div>
-        <div class="detail-publisher">${g.publisher || ''}${g.year ? ' · '+g.year : ''}</div>
+        <div class="detail-publisher">${g.publisher||''}${g.year?' · '+g.year:''}</div>
         <div class="detail-tags">
-          <span class="detail-tag highlight">${g.type || 'Sonstiges'}</span>
+          <span class="detail-tag highlight">${g.type||'Sonstiges'}</span>
           <span class="detail-tag">👤 ${ptext}</span>
-          ${g.duration ? `<span class="detail-tag">⏱ ${g.duration} min</span>` : ''}
-          ${g.age ? `<span class="detail-tag">🔞 ab ${g.age}</span>` : ''}
-          ${g.price ? `<span class="detail-tag">💶 ${g.price}€</span>` : ''}
+          ${g.duration?`<span class="detail-tag">⏱ ${g.duration} min</span>`:''}
+          ${g.age?`<span class="detail-tag">🔞 ab ${g.age}</span>`:''}
+          ${g.price?`<span class="detail-tag">💶 ${g.price}€</span>`:''}
         </div>
-        <div class="detail-rating-row">
-          ${starsHtml}
-          <span class="detail-played">Gespielt: <strong>${g.played || 0}</strong>×</span>
-        </div>
+        <div class="detail-rating-row">${si}<span class="detail-played">Gespielt: <strong>${g.played||0}</strong>×</span></div>
       </div>
     </div>
-    ${g.desc ? `<div class="detail-section"><div class="detail-section-title">Beschreibung</div><div class="detail-desc">${g.desc}</div></div>` : ''}
+    ${g.desc?`<div class="detail-section"><div class="detail-section-title">Beschreibung</div><div class="detail-desc">${g.desc}</div></div>`:''}
     <div class="detail-section">
       <div class="detail-section-title">Details</div>
       <div class="detail-grid">
         <div class="detail-stat"><div class="detail-stat-label">Spieler</div><div class="detail-stat-value">${ptext}</div></div>
-        <div class="detail-stat"><div class="detail-stat-label">Dauer</div><div class="detail-stat-value">${g.duration ? g.duration+' min' : '–'}</div></div>
-        <div class="detail-stat"><div class="detail-stat-label">Preis</div><div class="detail-stat-value">${g.price ? g.price+'€' : '–'}</div></div>
-        <div class="detail-stat"><div class="detail-stat-label">Alter</div><div class="detail-stat-value">${g.age ? 'ab '+g.age : '–'}</div></div>
+        <div class="detail-stat"><div class="detail-stat-label">Dauer</div><div class="detail-stat-value">${g.duration?g.duration+' min':'–'}</div></div>
+        <div class="detail-stat"><div class="detail-stat-label">Preis</div><div class="detail-stat-value">${g.price?g.price+'€':'–'}</div></div>
+        <div class="detail-stat"><div class="detail-stat-label">Alter</div><div class="detail-stat-value">${g.age?'ab '+g.age:'–'}</div></div>
       </div>
     </div>
     <div class="detail-actions">
       <button class="btn-primary" id="detailPlayBtn">▶ GESPIELT (+1)</button>
       <button class="btn-secondary" id="detailEditBtn">✎ Bearbeiten</button>
-      ${g.bgg ? `<button class="btn-secondary" onclick="window.open('${g.bgg}','_blank')">BGG</button>` : ''}
+      ${g.shop?`<a href="${g.shop}" target="_blank" rel="noopener"><button class="btn-secondary">🛒 Shop</button></a>`:''}
       <button class="btn-danger" id="detailDeleteBtn">🗑</button>
-    </div>
-  `;
-
-  document.getElementById('detailPlayBtn').onclick = async () => {
-    g.played = (g.played || 0) + 1;
-    await putGame(g);
-    games = await getAll();
-    openDetail(id);
-    render();
-    toast(`▶ ${g.name} gespielt! (${g.played}×)`);
-  };
-  document.getElementById('detailEditBtn').onclick = () => { closeDetail(); openEdit(id); };
-  document.getElementById('detailDeleteBtn').onclick = async () => {
-    if (confirm(`"${g.name}" wirklich löschen?`)) {
-      await delGame(id);
-      games = await getAll();
-      closeDetail();
-      render();
-      toast('🗑 Spiel gelöscht');
-    }
-  };
-
-  // Rating stars in detail
-  document.querySelectorAll('#detailStars span').forEach(s => {
-    s.onclick = async () => {
-      const v = parseInt(s.dataset.v);
-      g.rating = g.rating === v ? 0 : v;
-      await putGame(g);
-      games = await getAll();
-      openDetail(id);
-      render();
-    };
-  });
-
+    </div>`;
+  document.getElementById('detailPlayBtn').onclick=async()=>{g.played=(g.played||0)+1;await putGame(g);games=await getAll();openDetail(id);render();toast(`▶ ${g.name} gespielt! (${g.played}×)`)};
+  document.getElementById('detailEditBtn').onclick=()=>{closeDetail();openEdit(id)};
+  document.getElementById('detailDeleteBtn').onclick=async()=>{if(confirm(`"${g.name}" wirklich löschen?`)){await delGame(id);games=await getAll();closeDetail();render();toast('🗑 Spiel gelöscht')}};
+  document.querySelectorAll('#detailStars span').forEach(s=>{s.onclick=async()=>{const v=parseInt(s.dataset.v);g.rating=g.rating===v?0:v;await putGame(g);games=await getAll();openDetail(id);render()}});
   document.getElementById('detailModal').classList.add('open');
 }
-function closeDetail() { document.getElementById('detailModal').classList.remove('open'); }
+function closeDetail(){document.getElementById('detailModal').classList.remove('open')}
 
-// ═══════════════════════════════════════════════════════
-// EDIT / ADD MODAL
-// ═══════════════════════════════════════════════════════
-function openEdit(id = null) {
-  editingId = id;
-  formRating = 0;
-  const isNew = id === null;
-  document.getElementById('formTitle').textContent = isNew ? 'Neues Spiel hinzufügen' : 'Spiel bearbeiten';
-
-  if (!isNew) {
-    const g = games.find(x => x.id === id);
-    document.getElementById('f_name').value = g.name || '';
-    document.getElementById('f_publisher').value = g.publisher || '';
-    document.getElementById('f_year').value = g.year || '';
-    document.getElementById('f_minPlayers').value = g.minPlayers || '';
-    document.getElementById('f_maxPlayers').value = g.maxPlayers || '';
-    document.getElementById('f_duration').value = g.duration || '';
-    document.getElementById('f_price').value = g.price || '';
-    document.getElementById('f_type').value = g.type || 'Sonstiges';
-    document.getElementById('f_age').value = g.age || '';
-    document.getElementById('f_image').value = g.image || '';
-    document.getElementById('f_desc').value = g.desc || '';
-    document.getElementById('f_played').value = g.played || 0;
-    document.getElementById('f_bgg').value = g.bgg || '';
-    formRating = g.rating || 0;
-  } else {
-    document.getElementById('gameForm').reset();
-  }
+// ── EDIT ────────────────────────────────────────────────
+function openEdit(id=null){
+  editingId=id;formRating=0;
+  document.getElementById('formTitle').textContent=id===null?'Neues Spiel hinzufügen':'Spiel bearbeiten';
+  if(id!==null){
+    const g=games.find(x=>x.id===id);
+    document.getElementById('f_name').value=g.name||'';
+    document.getElementById('f_publisher').value=g.publisher||'';
+    document.getElementById('f_year').value=g.year||'';
+    document.getElementById('f_minPlayers').value=g.minPlayers||'';
+    document.getElementById('f_maxPlayers').value=g.maxPlayers||'';
+    document.getElementById('f_duration').value=g.duration||'';
+    document.getElementById('f_price').value=g.price||'';
+    document.getElementById('f_age').value=g.age||'';
+    document.getElementById('f_image').value=g.image||'';
+    document.getElementById('f_desc').value=g.desc||'';
+    document.getElementById('f_played').value=g.played||0;
+    document.getElementById('f_shop').value=g.shop||'';
+    formRating=g.rating||0;
+  }else{document.getElementById('gameForm').reset();}
   updateFormStars();
   document.getElementById('editModal').classList.add('open');
 }
+function updateFormStars(){document.querySelectorAll('#formStars span').forEach(s=>{const v=parseInt(s.dataset.v);s.classList.toggle('active',v<=formRating);s.textContent=v<=formRating?'★':'☆'})}
 
-function updateFormStars() {
-  document.querySelectorAll('#formStars span').forEach(s => {
-    s.classList.toggle('active', parseInt(s.dataset.v) <= formRating);
-    s.textContent = parseInt(s.dataset.v) <= formRating ? '★' : '☆';
+// ── EVENTS ──────────────────────────────────────────────
+function setupEvents(){
+  document.getElementById('grid').addEventListener('click',e=>{
+    const ab=e.target.closest('[data-action]');
+    if(ab){e.stopPropagation();const id=parseInt(ab.dataset.id);
+      if(ab.dataset.action==='edit')openEdit(id);
+      else if(ab.dataset.action==='play'){const g=games.find(x=>x.id===id);if(g){g.played=(g.played||0)+1;putGame(g).then(()=>getAll().then(a=>{games=a;render();toast(`▶ ${g.name} gespielt!`)}))}}
+    return;}
+    const card=e.target.closest('.game-card');if(card)openDetail(parseInt(card.dataset.id));
   });
-}
-
-// ═══════════════════════════════════════════════════════
-// EVENTS
-// ═══════════════════════════════════════════════════════
-function setupEvents() {
-  // Grid clicks
-  document.getElementById('grid').addEventListener('click', e => {
-    const actionBtn = e.target.closest('[data-action]');
-    if (actionBtn) {
-      e.stopPropagation();
-      const id = parseInt(actionBtn.dataset.id);
-      if (actionBtn.dataset.action === 'edit') openEdit(id);
-      else if (actionBtn.dataset.action === 'play') {
-        const g = games.find(x => x.id === id);
-        if (g) { g.played = (g.played||0)+1; putGame(g).then(() => getAll().then(a => { games = a; render(); toast(`▶ ${g.name} gespielt!`); })); }
-      }
-      return;
-    }
-    const card = e.target.closest('.game-card');
-    if (card) openDetail(parseInt(card.dataset.id));
-  });
-
-  // Close modals
-  document.getElementById('detailModal').addEventListener('click', e => {
-    if (e.target === document.getElementById('detailModal')) closeDetail();
-  });
-  document.getElementById('editModal').addEventListener('click', e => {
-    if (e.target === document.getElementById('editModal')) document.getElementById('editModal').classList.remove('open');
-  });
-
-  // Add game
-  document.getElementById('btnAddGame').onclick = () => openEdit(null);
-  document.getElementById('btnCancelEdit').onclick = () => document.getElementById('editModal').classList.remove('open');
-
-  // Save form
-  document.getElementById('btnSave').onclick = async () => {
-    const name = document.getElementById('f_name').value.trim();
-    if (!name) { toast('⚠ Name ist pflicht!'); return; }
-    const g = editingId ? { ...games.find(x => x.id === editingId) } : {};
-    g.name = name;
-    g.publisher = document.getElementById('f_publisher').value.trim();
-    g.year = parseInt(document.getElementById('f_year').value) || null;
-    g.minPlayers = parseInt(document.getElementById('f_minPlayers').value) || 1;
-    g.maxPlayers = parseInt(document.getElementById('f_maxPlayers').value) || 4;
-    g.duration = parseInt(document.getElementById('f_duration').value) || null;
-    g.price = parseFloat(document.getElementById('f_price').value) || null;
-    g.type = document.getElementById('f_type').value;
-    g.age = parseInt(document.getElementById('f_age').value) || null;
-    g.image = document.getElementById('f_image').value.trim();
-    g.desc = document.getElementById('f_desc').value.trim();
-    g.played = parseInt(document.getElementById('f_played').value) || 0;
-    g.bgg = document.getElementById('f_bgg').value.trim();
-    g.rating = formRating;
-    await putGame(g);
-    games = await getAll();
+  document.getElementById('detailModal').addEventListener('click',e=>{if(e.target===document.getElementById('detailModal'))closeDetail()});
+  document.getElementById('editModal').addEventListener('click',e=>{if(e.target===document.getElementById('editModal'))document.getElementById('editModal').classList.remove('open')});
+  document.getElementById('btnAddGame').onclick=()=>openEdit(null);
+  document.getElementById('btnCancelEdit').onclick=()=>document.getElementById('editModal').classList.remove('open');
+  document.getElementById('btnSave').onclick=async()=>{
+    const name=document.getElementById('f_name').value.trim();
+    if(!name){toast('⚠ Name ist Pflicht!');return;}
+    const g=editingId?{...games.find(x=>x.id===editingId)}:{};
+    g.name=name;g.publisher=document.getElementById('f_publisher').value.trim();
+    g.year=parseInt(document.getElementById('f_year').value)||null;
+    g.minPlayers=parseInt(document.getElementById('f_minPlayers').value)||1;
+    g.maxPlayers=parseInt(document.getElementById('f_maxPlayers').value)||4;
+    g.duration=parseInt(document.getElementById('f_duration').value)||null;
+    g.price=parseFloat(document.getElementById('f_price').value)||null;
+    g.type=document.getElementById('f_type').value;
+    g.age=parseInt(document.getElementById('f_age').value)||null;
+    g.image=document.getElementById('f_image').value.trim();
+    g.desc=document.getElementById('f_desc').value.trim();
+    g.played=parseInt(document.getElementById('f_played').value)||0;
+    g.shop=document.getElementById('f_shop').value.trim();
+    g.rating=formRating;
+    await putGame(g);games=await getAll();
     document.getElementById('editModal').classList.remove('open');
-    render();
-    toast(editingId ? '✓ Spiel aktualisiert' : '✓ Spiel hinzugefügt');
+    render();toast(editingId?'✓ Spiel aktualisiert':'✓ Spiel hinzugefügt');
   };
-
-  // Form stars
-  document.querySelectorAll('#formStars span').forEach(s => {
-    s.onclick = () => { formRating = formRating === parseInt(s.dataset.v) ? 0 : parseInt(s.dataset.v); updateFormStars(); };
-  });
-
-  // Filter chips
-  document.querySelectorAll('.filter-chip').forEach(btn => {
-    btn.onclick = () => {
-      const f = btn.dataset.filter;
-      document.querySelectorAll(`.filter-chip[data-filter="${f}"]`).forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      filters[f] = btn.dataset.val;
-      render();
-    };
-  });
-
-  // Sort
-  document.getElementById('sortSelect').onchange = e => { sortBy = e.target.value; render(); };
-
-  // Search
-  document.getElementById('searchInput').oninput = e => { filters.search = e.target.value; render(); };
-
-  // View toggle
-  document.getElementById('viewToggle').onclick = () => {
-    viewMode = viewMode === 'grid' ? 'list' : 'grid';
-    document.getElementById('grid').classList.toggle('list-view', viewMode === 'list');
-    document.getElementById('viewToggle').textContent = viewMode === 'list' ? '⊟' : '⊞';
-  };
+  document.querySelectorAll('#formStars span').forEach(s=>{s.onclick=()=>{formRating=formRating===parseInt(s.dataset.v)?0:parseInt(s.dataset.v);updateFormStars()}});
+  document.querySelectorAll('.filter-chip').forEach(btn=>{btn.onclick=()=>{const f=btn.dataset.filter;document.querySelectorAll(`.filter-chip[data-filter="${f}"]`).forEach(b=>b.classList.remove('active'));btn.classList.add('active');filters[f]=btn.dataset.val;render()}});
+  document.getElementById('sortSelect').onchange=e=>{sortBy=e.target.value;render()};
+  document.getElementById('searchInput').oninput=e=>{filters.search=e.target.value;render()};
+  document.getElementById('viewToggle').onclick=()=>{viewMode=viewMode==='grid'?'list':'grid';document.getElementById('grid').classList.toggle('list-view',viewMode==='list');document.getElementById('viewToggle').textContent=viewMode==='list'?'⊟':'⊞'};
 }
 
-// ═══════════════════════════════════════════════════════
-// TOAST
-// ═══════════════════════════════════════════════════════
 let toastTimer;
-function toast(msg) {
-  const el = document.getElementById('toast');
-  el.textContent = msg;
-  el.classList.add('show');
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => el.classList.remove('show'), 2500);
-}
+function toast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('show'),2500)}
 
-// ═══════════════════════════════════════════════════════
-// BOOT
-// ═══════════════════════════════════════════════════════
-init().catch(err => {
-  document.getElementById('spinner').style.display = 'none';
-  document.getElementById('grid').innerHTML = `<p style="color:var(--text3);padding:40px">Fehler: ${err.message}</p>`;
-  document.getElementById('grid').style.display = 'block';
-});
+init().catch(err=>{document.getElementById('spinner').style.display='none';document.getElementById('grid').innerHTML=`<p style="color:var(--text3);padding:40px">Fehler: ${err.message}</p>`;document.getElementById('grid').style.display='block'});
 </script>
 </body>
 </html>
