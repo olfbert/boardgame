@@ -28,13 +28,13 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:radial-gradi
 .btn-icon:hover{border-color:var(--gold);color:var(--gold)}
 .btn-add{background:var(--gold);border:none;border-radius:var(--radius2);color:#0d0d14;padding:0 16px;height:40px;font-family:'Cinzel',serif;font-size:0.75rem;font-weight:700;letter-spacing:0.08em;cursor:pointer;transition:all .2s;white-space:nowrap;display:flex;align-items:center;gap:6px}
 .btn-add:hover{background:var(--gold2);transform:translateY(-1px)}
-#statbar{background:var(--bg2);border-bottom:1px solid var(--border2);padding:0 20px}
+#statbar{background:var(--bg2);border-bottom:1px solid var(--border2);padding:0 max(20px,env(safe-area-inset-right)) 0 max(20px,env(safe-area-inset-left))}
 .statbar-inner{max-width:1400px;margin:0 auto;display:flex;gap:24px;align-items:center;height:44px;overflow-x:auto;scrollbar-width:none}
 .statbar-inner::-webkit-scrollbar{display:none}
 .stat-item{display:flex;align-items:center;gap:6px;white-space:nowrap;font-size:0.82rem;color:var(--text2)}
 .stat-item span{color:var(--gold);font-family:'JetBrains Mono',monospace;font-size:0.85rem}
 .stat-sep{width:1px;height:20px;background:var(--border2);flex-shrink:0}
-#filterbar{padding:16px 20px 0;max-width:1400px;margin:0 auto}
+#filterbar{padding:16px max(20px,env(safe-area-inset-right)) 0 max(20px,env(safe-area-inset-left));max-width:1400px;margin:0 auto}
 .filter-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
 .filter-label{font-family:'JetBrains Mono',monospace;font-size:0.7rem;color:var(--text3);letter-spacing:0.1em;text-transform:uppercase;margin-right:4px}
 .filter-chip{background:var(--bg3);border:1px solid var(--border2);border-radius:100px;color:var(--text2);font-family:'Crimson Text',serif;font-size:0.88rem;padding:5px 14px;cursor:pointer;transition:all .15s;white-space:nowrap}
@@ -43,7 +43,7 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:radial-gradi
 .filter-select{background:var(--bg3);border:1px solid var(--border2);border-radius:var(--radius2);color:var(--text2);font-family:'Crimson Text',serif;font-size:0.88rem;padding:5px 28px 5px 10px;cursor:pointer;outline:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%235a5465'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;transition:border-color .2s}
 .filter-select:focus{border-color:var(--gold)}
 .filter-results{font-size:0.82rem;color:var(--text3);font-family:'JetBrains Mono',monospace;margin-left:auto}
-#main{max-width:1400px;margin:0 auto;padding:16px 20px 40px}
+#main{max-width:1400px;margin:0 auto;padding:16px max(20px,env(safe-area-inset-right)) max(40px,calc(env(safe-area-inset-bottom)+20px)) max(20px,env(safe-area-inset-left))}
 #grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:16px}
 .game-card{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--radius);overflow:hidden;cursor:pointer;transition:transform .2s,border-color .2s,box-shadow .2s;position:relative}
 .game-card:hover{transform:translateY(-4px) scale(1.01);border-color:var(--border);box-shadow:var(--shadow),0 0 0 1px rgba(201,168,76,0.15)}
@@ -120,8 +120,9 @@ input:focus,select:focus,textarea:focus{border-color:var(--gold)}
 textarea{resize:vertical;min-height:80px}
 select option{background:var(--bg2)}
 .form-modal-title{font-family:'Cinzel',serif;font-size:1.1rem;font-weight:700;color:var(--gold);padding:16px 20px 0}
-#toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--bg3);border:1px solid var(--border);border-radius:100px;color:var(--text);font-family:'Crimson Text',serif;font-size:0.95rem;padding:10px 20px;box-shadow:var(--shadow);z-index:999;opacity:0;transition:opacity .25s,transform .25s;pointer-events:none;white-space:nowrap}
+#toast{position:fixed;bottom:max(30px,calc(env(safe-area-inset-bottom) + 16px));left:50%;transform:translateX(-50%) translateY(20px);background:var(--bg3);border:1px solid var(--border);border-radius:100px;color:var(--text);font-family:'Crimson Text',serif;font-size:0.95rem;padding:10px 20px;box-shadow:var(--shadow);z-index:999;opacity:0;transition:opacity .25s,transform .25s;pointer-events:none;white-space:nowrap}
 #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.modal-sheet{padding-bottom:env(safe-area-inset-bottom)}
 #grid.list-view{grid-template-columns:1fr}
 #grid.list-view .game-card{display:flex;flex-direction:row}
 #grid.list-view .card-cover{width:70px;min-width:70px;padding-top:0;height:90px}
@@ -135,6 +136,17 @@ select option{background:var(--bg2)}
 @keyframes spin{to{transform:rotate(360deg)}}
 @media(max-width:600px){#grid{grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px}.header-inner{height:56px}.logo{font-size:1.1rem}.detail-header{flex-direction:column;align-items:center;text-align:center}.detail-tags{justify-content:center}.detail-rating-row{justify-content:center}.form-row{grid-template-columns:1fr}}
 @media(max-width:400px){#grid{grid-template-columns:repeat(2,1fr)}}
+
+.img-picker-wrap{display:flex;flex-direction:column;gap:8px}
+.img-preview{width:100%;height:120px;border-radius:var(--radius2);border:1px dashed var(--border);background:var(--bg3);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;overflow:hidden;position:relative}
+.img-preview img{width:100%;height:100%;object-fit:cover;border-radius:var(--radius2)}
+.img-preview-icon{font-size:2rem;opacity:0.3}
+.img-preview-text{font-size:0.8rem;color:var(--text3)}
+.img-btns{display:flex;gap:8px}
+.btn-img-pick{background:var(--gold-dim);border:1px solid var(--gold);border-radius:var(--radius2);color:var(--gold);font-family:'Cinzel',serif;font-size:0.72rem;font-weight:700;letter-spacing:0.06em;padding:9px 14px;cursor:pointer;transition:all .2s;white-space:nowrap}
+.btn-img-pick:hover{background:var(--gold);color:#0d0d14}
+.btn-img-clear{background:var(--bg3);border:1px solid var(--border2);border-radius:var(--radius2);color:var(--text3);font-family:'Crimson Text',serif;font-size:0.9rem;padding:9px 12px;cursor:pointer;transition:all .2s}
+.btn-img-clear:hover{border-color:#e74c3c;color:#e74c3c}
 ::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--bg4);border-radius:3px}
 </style>
 </head>
@@ -256,7 +268,21 @@ select option{background:var(--bg2)}
           </div>
           <div class="form-group"><label>Alter (ab)</label><input type="number" id="f_age" placeholder="10" min="0" max="99"></div>
         </div>
-        <div class="form-group full"><label>Cover-Bild URL</label><input type="url" id="f_image" placeholder="https://…"></div>
+        <div class="form-group full">
+          <label>Cover-Bild</label>
+          <div class="img-picker-wrap">
+            <div class="img-preview" id="imgPreview">
+              <span class="img-preview-icon">🖼</span>
+              <span class="img-preview-text">Kein Bild ausgewählt</span>
+            </div>
+            <div class="img-btns">
+              <label class="btn-img-pick" for="f_imageFile">📷 Foto wählen</label>
+              <input type="file" id="f_imageFile" accept="image/*" style="display:none">
+              <button type="button" class="btn-img-clear" id="btnImgClear">✕ Entfernen</button>
+            </div>
+            <input type="url" id="f_image" placeholder="Oder Bild-URL eingeben: https://…">
+          </div>
+        </div>
         <div class="form-group full"><label>Beschreibung</label><textarea id="f_desc" placeholder="Kurze Beschreibung…"></textarea></div>
         <div class="form-group full">
           <label>Bewertung (1–5 Sterne)</label>
@@ -523,11 +549,61 @@ function openEdit(id=null){
     document.getElementById('f_played').value=g.played||0;
     document.getElementById('f_shop').value=g.shop||'';
     formRating=g.rating||0;
-  }else{document.getElementById('gameForm').reset();}
+    // Show image preview
+    setImgPreview(g.image||'');
+  }else{document.getElementById('gameForm').reset();setImgPreview('');}
   updateFormStars();
   document.getElementById('editModal').classList.add('open');
 }
 function updateFormStars(){document.querySelectorAll('#formStars span').forEach(s=>{const v=parseInt(s.dataset.v);s.classList.toggle('active',v<=formRating);s.textContent=v<=formRating?'★':'☆'})}
+
+
+// ── IMAGE PICKER ────────────────────────────────────────
+let currentImgData = ''; // holds base64 or URL for current edit session
+
+function setImgPreview(src){
+  currentImgData = src;
+  const el = document.getElementById('imgPreview');
+  document.getElementById('f_image').value = src && !src.startsWith('data:') ? src : '';
+  if(src){
+    el.innerHTML = `<img src="${src}" alt="Cover" onerror="this.parentElement.innerHTML='<span class=img-preview-icon>🖼</span><span class=img-preview-text style=color:var(--text3)>Bild nicht ladbar</span>'">`;
+  } else {
+    el.innerHTML = '<span class="img-preview-icon">🖼</span><span class="img-preview-text">Kein Bild ausgewählt</span>';
+  }
+}
+
+function initImgPicker(){
+  document.getElementById('f_imageFile').onchange = e => {
+    const file = e.target.files[0];
+    if(!file) return;
+    // Resize to max 600px wide to keep DB small
+    const reader = new FileReader();
+    reader.onload = ev => {
+      const img = new Image();
+      img.onload = () => {
+        const MAX = 600;
+        let w = img.width, h = img.height;
+        if(w > MAX){ h = Math.round(h * MAX / w); w = MAX; }
+        const canvas = document.createElement('canvas');
+        canvas.width = w; canvas.height = h;
+        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+        const data = canvas.toDataURL('image/jpeg', 0.82);
+        setImgPreview(data);
+        document.getElementById('f_image').value = '';
+      };
+      img.src = ev.target.result;
+    };
+    reader.readAsDataURL(file);
+  };
+  document.getElementById('btnImgClear').onclick = () => {
+    setImgPreview('');
+    document.getElementById('f_imageFile').value = '';
+    document.getElementById('f_image').value = '';
+  };
+  document.getElementById('f_image').oninput = e => {
+    if(e.target.value) setImgPreview(e.target.value);
+  };
+}
 
 // ── EVENTS ──────────────────────────────────────────────
 function setupEvents(){
@@ -555,7 +631,7 @@ function setupEvents(){
     g.price=parseFloat(document.getElementById('f_price').value)||null;
     g.type=document.getElementById('f_type').value;
     g.age=parseInt(document.getElementById('f_age').value)||null;
-    g.image=document.getElementById('f_image').value.trim();
+    g.image = currentImgData || document.getElementById('f_image').value.trim();
     g.desc=document.getElementById('f_desc').value.trim();
     g.played=parseInt(document.getElementById('f_played').value)||0;
     g.shop=document.getElementById('f_shop').value.trim();
@@ -568,6 +644,7 @@ function setupEvents(){
   document.querySelectorAll('.filter-chip').forEach(btn=>{btn.onclick=()=>{const f=btn.dataset.filter;document.querySelectorAll(`.filter-chip[data-filter="${f}"]`).forEach(b=>b.classList.remove('active'));btn.classList.add('active');filters[f]=btn.dataset.val;render()}});
   document.getElementById('sortSelect').onchange=e=>{sortBy=e.target.value;render()};
   document.getElementById('searchInput').oninput=e=>{filters.search=e.target.value;render()};
+  initImgPicker();
   document.getElementById('viewToggle').onclick=()=>{viewMode=viewMode==='grid'?'list':'grid';document.getElementById('grid').classList.toggle('list-view',viewMode==='list');document.getElementById('viewToggle').textContent=viewMode==='list'?'⊟':'⊞'};
 }
 
