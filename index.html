@@ -159,6 +159,30 @@ select option{background:var(--bg2)}
 .options-item.gold{color:var(--gold)}
 .options-item.gold:hover{background:var(--gold-dim)}
 .options-sep{height:1px;background:var(--border2);margin:4px 0}
+
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:16px 20px}
+.stats-card{background:var(--bg3);border:1px solid var(--border2);border-radius:var(--radius);padding:16px;display:flex;flex-direction:column;gap:4px}
+.stats-card.wide{grid-column:1/-1}
+.stats-card-icon{font-size:1.6rem;margin-bottom:4px}
+.stats-card-value{font-family:'Cinzel',serif;font-size:1.4rem;font-weight:700;color:var(--gold);line-height:1}
+.stats-card-label{font-family:'JetBrains Mono',monospace;font-size:0.68rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);margin-top:2px}
+.stats-card-sub{font-size:0.82rem;color:var(--text2);margin-top:4px}
+.stats-section-title{font-family:'JetBrains Mono',monospace;font-size:0.7rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--text3);padding:16px 20px 0;display:flex;align-items:center;gap:8px}
+.stats-section-title::after{content:'';flex:1;height:1px;background:var(--border2)}
+.stats-top-list{padding:8px 20px 0;display:flex;flex-direction:column;gap:6px}
+.stats-top-item{display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--bg3);border-radius:var(--radius2);border:1px solid var(--border2)}
+.stats-top-rank{font-family:'Cinzel',serif;font-size:0.75rem;color:var(--gold);min-width:20px}
+.stats-top-name{flex:1;font-size:0.9rem;color:var(--text);font-family:'Crimson Text',serif}
+.stats-top-val{font-family:'JetBrains Mono',monospace;font-size:0.75rem;color:var(--text2)}
+.stats-bar-wrap{padding:8px 20px 0;display:flex;flex-direction:column;gap:8px}
+.stats-bar-row{display:flex;flex-direction:column;gap:4px}
+.stats-bar-label{display:flex;justify-content:space-between;font-size:0.82rem;color:var(--text2)}
+.stats-bar-label span:last-child{font-family:'JetBrains Mono',monospace;font-size:0.75rem;color:var(--text3)}
+.stats-bar-track{height:6px;background:var(--bg4);border-radius:3px;overflow:hidden}
+.stats-bar-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold2));border-radius:3px;transition:width .6s cubic-bezier(.4,0,.2,1)}
+.stats-modal-title{font-family:'Cinzel',serif;font-size:1.2rem;font-weight:700;color:var(--gold);padding:16px 20px 0;display:flex;align-items:center;gap:10px}
+.stats-close{margin-left:auto;background:none;border:none;color:var(--text3);font-size:1.3rem;cursor:pointer;padding:4px 8px;border-radius:6px;transition:color .2s}
+.stats-close:hover{color:var(--text)}
 ::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--bg4);border-radius:3px}
 </style>
 </head>
@@ -178,6 +202,8 @@ select option{background:var(--bg2)}
         <button class="btn-options" id="btnOptions" title="Optionen">⋮</button>
         <div class="options-menu" id="optionsMenu">
           <button class="options-item gold" id="btnAddGame"><span class="oi">＋</span> Neues Spiel</button>
+          <div class="options-sep"></div>
+          <button class="options-item" id="btnStats"><span class="oi">📊</span> Statistiken</button>
           <div class="options-sep"></div>
           <button class="options-item" id="btnExport"><span class="oi">⬇</span> Exportieren</button>
           <button class="options-item" id="btnImport"><span class="oi">⬆</span> Importieren</button>
@@ -240,6 +266,19 @@ select option{background:var(--bg2)}
     <p>Passe die Filter an oder füge ein neues Spiel hinzu.</p>
   </div>
 </div>
+</div>
+
+<!-- STATS MODAL -->
+<div class="modal-overlay" id="statsModal">
+  <div class="modal-sheet" id="statsSheet">
+    <div class="modal-handle"></div>
+    <div class="stats-modal-title">
+      📊 Statistiken
+      <button class="stats-close" id="statsClose">✕</button>
+    </div>
+    <div id="statsContent"></div>
+    <div style="height:20px"></div>
+  </div>
 </div>
 
 <!-- DETAIL MODAL -->
@@ -693,6 +732,9 @@ function setupEvents(){
   document.getElementById('sortSelect').onchange=e=>{sortBy=e.target.value;render()};
   document.getElementById('searchInput').oninput=e=>{filters.search=e.target.value;render()};
   initImgPicker();
+  document.getElementById('btnStats').onclick = openStats;
+  document.getElementById('statsClose').onclick = () => document.getElementById('statsModal').classList.remove('open');
+  document.getElementById('statsModal').addEventListener('click', e => { if(e.target===document.getElementById('statsModal')) document.getElementById('statsModal').classList.remove('open'); });
   document.getElementById('btnExport').onclick = exportGames;
   document.getElementById('btnImport').onclick = () => document.getElementById('importFile').click();
   document.getElementById('importFile').onchange = e => {
@@ -723,6 +765,88 @@ function setupEvents(){
 let toastTimer;
 function toast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('show'),2500)}
 
+
+
+// ── STATISTICS ─────────────────────────────────────────
+function openStats(){
+  const total = games.length;
+  const played = games.filter(g => g.played > 0);
+  const rated  = games.filter(g => g.rating > 0);
+  const totalPlays = games.reduce((s,g) => s + (g.played||0), 0);
+
+  // Total playtime: played × duration per game
+  const totalMinutes = games.reduce((s,g) => s + ((g.played||0) * (g.duration||0)), 0);
+  const totalHours = Math.floor(totalMinutes / 60);
+  const remMins = totalMinutes % 60;
+  const timeStr = totalHours > 0 ? `${totalHours}h ${remMins}min` : `${remMins}min`;
+
+  // Total price
+  const totalPrice = games.reduce((s,g) => s + (g.price||0), 0).toFixed(2);
+  const playedPrice = played.reduce((s,g) => s + (g.price||0), 0).toFixed(2);
+  const unplayedPrice = (totalPrice - playedPrice).toFixed(2);
+
+  // Avg rating
+  const avgRating = rated.length ? (rated.reduce((s,g) => s + g.rating,0) / rated.length).toFixed(1) : '–';
+
+  // Cost per play
+  const costPerPlay = totalPlays > 0
+    ? (games.reduce((s,g) => s + (g.price||0),0) / totalPlays).toFixed(2)
+    : '–';
+
+  // Top 5 most played
+  const top5played = [...games].filter(g=>g.played>0).sort((a,b)=>b.played-a.played).slice(0,5);
+
+  // Top 5 best rated
+  const top5rated = [...games].filter(g=>g.rating>0).sort((a,b)=>b.rating-a.rating||b.played-a.played).slice(0,5);
+
+  // By type counts
+  const typeCounts = {};
+  games.forEach(g => { typeCounts[g.type||'Sonstiges'] = (typeCounts[g.type||'Sonstiges']||0)+1; });
+  const typesSorted = Object.entries(typeCounts).sort((a,b)=>b[1]-a[1]);
+  const maxType = typesSorted[0]?.[1] || 1;
+
+  // By player count
+  const soloCount  = games.filter(g=>g.minPlayers===1).length;
+  const duoCount   = games.filter(g=>g.maxPlayers===2).length;
+  const groupCount = games.filter(g=>g.maxPlayers>=5).length;
+
+  // Longest single session estimate
+  const longestGame = [...games].sort((a,b)=>(b.duration||0)-(a.duration||0))[0];
+
+  const topListHtml = (arr, valFn, unitFn) => arr.map((g,i) => {
+    const medals = ['🥇','🥈','🥉','4.','5.'];
+    return `<div class="stats-top-item">
+      <span class="stats-top-rank">${medals[i]}</span>
+      <span class="stats-top-name">${g.name}</span>
+      <span class="stats-top-val">${valFn(g)} ${unitFn(g)}</span>
+    </div>`;
+  }).join('');
+
+  const barHtml = typesSorted.slice(0,8).map(([type, count]) => `
+    <div class="stats-bar-row">
+      <div class="stats-bar-label"><span>${type}</span><span>${count} Spiel${count!==1?'e':''}</span></div>
+      <div class="stats-bar-track"><div class="stats-bar-fill" style="width:${Math.round(count/maxType*100)}%"></div></div>
+    </div>`).join('');
+
+  document.getElementById('statsContent').innerHTML = `
+    <div class="stats-grid">
+      <div class="stats-card"><div class="stats-card-icon">🎲</div><div class="stats-card-value">${total}</div><div class="stats-card-label">Spiele gesamt</div></div>
+      <div class="stats-card"><div class="stats-card-icon">▶</div><div class="stats-card-value">${totalPlays}</div><div class="stats-card-label">Gesamte Partien</div><div class="stats-card-sub">${played.length} Spiele gespielt</div></div>
+      <div class="stats-card"><div class="stats-card-icon">⏱</div><div class="stats-card-value">${timeStr}</div><div class="stats-card-label">Gesamte Spielzeit</div><div class="stats-card-sub">Geschätzt anhand Spieldauer × Partien</div></div>
+      <div class="stats-card"><div class="stats-card-icon">⭐</div><div class="stats-card-value">${avgRating}</div><div class="stats-card-label">Ø Bewertung</div><div class="stats-card-sub">${rated.length} von ${total} bewertet</div></div>
+      <div class="stats-card"><div class="stats-card-icon">💶</div><div class="stats-card-value">${totalPrice}€</div><div class="stats-card-label">Neupreis gesamt</div><div class="stats-card-sub">${unplayedPrice}€ noch nie gespielt</div></div>
+      <div class="stats-card"><div class="stats-card-icon">🎯</div><div class="stats-card-value">${costPerPlay === '–' ? '–' : costPerPlay+'€'}</div><div class="stats-card-label">Kosten pro Partie</div><div class="stats-card-sub">Gesamtpreis ÷ Partien</div></div>
+      <div class="stats-card wide"><div class="stats-card-icon">🏠</div><div class="stats-card-value">${Math.round((played.length/total)*100)}%</div><div class="stats-card-label">Spielquote</div><div class="stats-card-sub">${total - played.length} Spiele noch unberührt · ${soloCount} solotauglich · ${groupCount} für 5+</div></div>
+    </div>
+    <div class="stats-section-title">🏆 Meistgespielt</div>
+    <div class="stats-top-list">${top5played.length ? topListHtml(top5played, g=>g.played, ()=>'×') : '<p style="color:var(--text3);padding:8px 0;font-size:.9rem">Noch keine Spiele gespielt</p>'}</div>
+    <div class="stats-section-title">⭐ Bestbewertet</div>
+    <div class="stats-top-list">${top5rated.length ? topListHtml(top5rated, g=>'★'.repeat(g.rating), ()=>'') : '<p style="color:var(--text3);padding:8px 0;font-size:.9rem">Noch keine Spiele bewertet</p>'}</div>
+    <div class="stats-section-title">📂 Nach Typ</div>
+    <div class="stats-bar-wrap">${barHtml}</div>
+  `;
+  document.getElementById('statsModal').classList.add('open');
+}
 
 // ── IMPORT / EXPORT ────────────────────────────────────────
 function exportGames(){
