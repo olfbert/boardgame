@@ -147,6 +147,18 @@ select option{background:var(--bg2)}
 .btn-img-pick:hover{background:var(--gold);color:#0d0d14}
 .btn-img-clear{background:var(--bg3);border:1px solid var(--border2);border-radius:var(--radius2);color:var(--text3);font-family:'Crimson Text',serif;font-size:0.9rem;padding:9px 12px;cursor:pointer;transition:all .2s}
 .btn-img-clear:hover{border-color:#e74c3c;color:#e74c3c}
+
+.options-wrap{position:relative}
+.btn-options{background:var(--bg3);border:1px solid var(--border2);border-radius:var(--radius2);color:var(--text);width:40px;height:40px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;cursor:pointer;transition:all .2s}
+.btn-options:hover,.btn-options.open{border-color:var(--gold);color:var(--gold)}
+.options-menu{position:absolute;top:calc(100% + 8px);right:0;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);min-width:200px;box-shadow:var(--shadow);z-index:300;overflow:hidden;opacity:0;pointer-events:none;transform:translateY(-6px);transition:opacity .18s,transform .18s}
+.options-menu.open{opacity:1;pointer-events:all;transform:translateY(0)}
+.options-item{display:flex;align-items:center;gap:12px;padding:13px 16px;cursor:pointer;font-family:'Crimson Text',serif;font-size:1rem;color:var(--text2);transition:background .15s,color .15s;border:none;background:none;width:100%;text-align:left}
+.options-item:hover{background:var(--bg3);color:var(--text)}
+.options-item .oi{font-size:1.1rem;width:20px;text-align:center}
+.options-item.gold{color:var(--gold)}
+.options-item.gold:hover{background:var(--gold-dim)}
+.options-sep{height:1px;background:var(--border2);margin:4px 0}
 ::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--bg4);border-radius:3px}
 </style>
 </head>
@@ -161,7 +173,16 @@ select option{background:var(--bg2)}
     </div>
     <div class="header-actions">
       <button class="btn-icon" id="viewToggle" title="Ansicht">⊞</button>
-      <button class="btn-add" id="btnAddGame">＋ Spiel</button>
+      <input type="file" id="importFile" accept=".json" style="display:none">
+      <div class="options-wrap">
+        <button class="btn-options" id="btnOptions" title="Optionen">⋮</button>
+        <div class="options-menu" id="optionsMenu">
+          <button class="options-item gold" id="btnAddGame"><span class="oi">＋</span> Neues Spiel</button>
+          <div class="options-sep"></div>
+          <button class="options-item" id="btnExport"><span class="oi">⬇</span> Exportieren</button>
+          <button class="options-item" id="btnImport"><span class="oi">⬆</span> Importieren</button>
+        </div>
+      </div>
     </div>
   </div>
 </header>
@@ -391,6 +412,33 @@ const SEED = [
   {name:"Cluedo",publisher:"Hasbro / Ravensburger",year:1949,minPlayers:3,maxPlayers:6,duration:60,type:"Detektiv",age:8,price:20,desc:"Der Ur-Klassiker der Detektivspiele: Wer hat wen womit und wo ermordet? Deduktions-Brettspiel für die ganze Familie. Seit über 70 Jahren ein Evergreen.",image:"https://m.media-amazon.com/images/I/81Pw+5S-W7L._AC_SL1500_.jpg",shop:"https://www.amazon.de/s?k=Cluedo+Brettspiel",played:0,rating:0},
   {name:"Wackelturm (Jenga)",publisher:"Verschiedene",year:1983,minPlayers:2,maxPlayers:6,duration:20,type:"Party",age:6,price:20,desc:"Zieht Holzklötzchen aus dem Turm und stapelt sie oben drauf – wer den Turm zum Einsturz bringt, verliert. Timeless Jenga-Klassiker.",image:"https://m.media-amazon.com/images/I/51E-XLkVgIL._AC_SL1000_.jpg",shop:"https://www.amazon.de/s?k=Wackelturm+Holz",played:0,rating:0},
   {name:"Zombie Teenz Evolution",publisher:"Le Scorpion Masqué / Huch!",year:2020,minPlayers:2,maxPlayers:4,duration:15,type:"Kooperativ",age:8,price:20,desc:"Kooperatives Legacy-Spiel für Familien: Befreit die Stadt von Zombies und schaltet über mehrere Spielabende neue Fähigkeiten frei. Nachfolger von Zombie Kidz.",image:"https://m.media-amazon.com/images/I/91GRVX3GKIL._AC_SL1500_.jpg",shop:"https://www.amazon.de/dp/B08C9ZKKLW",played:0,rating:0},
+  {name:"Exploding Kittens – NSFW Edition",publisher:"Exploding Kittens",year:2015,minPlayers:2,maxPlayers:5,duration:15,type:"Party",age:18,price:25,desc:"Die explizit-freizügige Erwachsenenversion des Kult-Kartenspiels. Gleiche Mechanik wie das Original – zieht Karten, vermeidet explodierende Kätzchen – aber mit deutlich anstößigeren Illustrationen.",image:"https://m.media-amazon.com/images/I/81nMFM3VCZL._AC_SL1500_.jpg",shop:"https://www.amazon.de/s?k=Exploding+Kittens+NSFW",played:0,rating:0},
+  {name:"Rommé",publisher:"Ravensburger",year:1900,minPlayers:2,maxPlayers:6,duration:60,type:"Karten",age:10,price:12,desc:"Klassisches Rommé mit zwei Kartendecks: Bildet Gruppen und Sequenzen, legt sie aus und wird als Erster die Karten los. Zeitloser Familienkartenspiel-Klassiker.",image:"https://m.media-amazon.com/images/I/71qn4g-QPVL._AC_SL1500_.jpg",shop:"https://www.amazon.de/s?k=Rommé+Kartenspiel+Ravensburger",played:0,rating:0},
+  {name:"Kannste Knicken",publisher:"Amigo",year:2021,minPlayers:2,maxPlayers:5,duration:30,type:"Karten",age:8,price:12,desc:"Spielt Karten aus und knickt die wertlosen ein – aber überlegt genau wann! Taktisches Handmanagement mit einfachen Regeln und überraschend viel Strategie.",image:"https://www.amigo-spiele.de/media/catalog/product/k/a/kannste-knicken_3d-box.jpg",shop:"https://www.amazon.de/s?k=Kannste+Knicken+Amigo",played:0,rating:0},
+  {name:"Psychiatrie des Schreckens – Teil 1",publisher:"Kosmos",year:2022,minPlayers:1,maxPlayers:4,duration:90,type:"Escape",age:16,price:20,desc:"Escape-Room-Kartenspiel in einer gruseligen Psychiatrie. Findet heraus was in der Anstalt wirklich vor sich geht. Spannende Thriller-Atmosphäre, einmalig spielbar.",image:"https://www.kosmos.de/media/catalog/product/6/8/6830155_3d-packshot_freigestellt.jpg",shop:"https://www.amazon.de/s?k=Psychiatrie+des+Schreckens+Teil+1+Kosmos",played:0,rating:0},
+  {name:"Psychiatrie des Schreckens – Teil 2",publisher:"Kosmos",year:2023,minPlayers:1,maxPlayers:4,duration:90,type:"Escape",age:16,price:20,desc:"Fortsetzung des Escape-Room-Spiels in der Psychiatrie. Die Geschichte geht weiter – neue Rätsel, neue Wendungen, gleich beklemmende Atmosphäre. Teil 1 empfohlen.",image:"https://www.kosmos.de/media/catalog/product/6/8/6830196_3d-packshot_freigestellt.jpg",shop:"https://www.amazon.de/s?k=Psychiatrie+des+Schreckens+Teil+2+Kosmos",played:0,rating:0},
+  {name:"Skyjo",publisher:"Magilano",year:2015,minPlayers:2,maxPlayers:8,duration:30,type:"Karten",age:8,price:17,desc:"Tauscht und deckt Karten auf um möglichst wenige Punkte zu sammeln. Einfach erklärt, schwer perfektioniert. Eines der meistverkauften Kartenspiele Deutschlands.",image:"https://m.media-amazon.com/images/I/71V7fELLvuL._AC_SL1500_.jpg",shop:"https://www.amazon.de/dp/B06XCG856B",played:0,rating:0},
+  {name:"Dumm Gelaufen",publisher:"Schmidt Spiele",year:2021,minPlayers:2,maxPlayers:6,duration:20,type:"Würfel",age:8,price:15,desc:"Würfelt und läuft – aber manchmal läuft man genau in die falsche Richtung. Lustiges Familienspiel mit Push-your-Luck-Elementen.",image:"https://www.schmidtspiele.de/files/produkte/4-49415_dumm-gelaufen_produktbild.jpg",shop:"https://www.amazon.de/s?k=Dumm+Gelaufen+Schmidt+Spiele",played:0,rating:0},
+  {name:"Penny Papers – Im Tempel von Apikhabou",publisher:"Atalia",year:2019,minPlayers:1,maxPlayers:6,duration:20,type:"Roll & Write",age:7,price:12,desc:"Roll & Write Abenteuer im ägyptischen Tempel: Würfelt und tragt Zahlen in euren persönlichen Tempelplan ein. Leicht gelernt, mehrere Runden, immer anders.",image:"https://m.media-amazon.com/images/I/81sFzU2TVQL._AC_SL1500_.jpg",shop:"https://www.amazon.de/s?k=Penny+Papers+Apikhabou",played:0,rating:0},
+  {name:"Magic Maze",publisher:"Sit Down! / Pegasus",year:2017,minPlayers:1,maxPlayers:8,duration:15,type:"Kooperativ",age:8,price:30,desc:"Kooperatives Echtzeit-Spiel ohne Kommunikation: Steuert Helden durch ein Einkaufszentrum indem jeder nur bestimmte Richtungen bewegen darf. Sanduhr-Stress pur.",image:"https://www.pegasus.de/media/catalog/product/5/1/51851g_box_right_300dpi_freigestellt.png",shop:"https://www.amazon.de/dp/B072MXP5K6",played:0,rating:0},
+  {name:"Magic Maze – Zwielichtige Gestalten",publisher:"Sit Down! / Pegasus",year:2018,minPlayers:1,maxPlayers:8,duration:15,type:"Kooperativ",age:8,price:20,desc:"Erweiterung zu Magic Maze mit neuen Szenarien, Rollen und Regeln. Fügt Diebe, Wachen und komplexere Einkaufszentrum-Layouts hinzu. Basisspiel erforderlich.",image:"https://www.pegasus.de/media/catalog/product/5/1/51852g_box_right_300dpi_freigestellt.png",shop:"https://www.amazon.de/s?k=Magic+Maze+Zwielichtige+Gestalten",played:0,rating:0},
+  {name:"Die Crew – Reise zum 9. Planeten",publisher:"Kosmos",year:2019,minPlayers:2,maxPlayers:5,duration:20,type:"Kooperativ",age:10,price:12,desc:"Kooperatives Stichkartenspiel: Erfüllt gemeinsam Aufgaben durch cleveres Kartenspielen ohne miteinander zu reden. Kennerspiel des Jahres 2020. Suchtgefahr hoch.",image:"https://www.kosmos.de/media/catalog/product/6/8/6830051_3d-packshot_freigestellt.jpg",shop:"https://www.amazon.de/dp/B07WSTMYQF",played:0,rating:0},
+  {name:"Qwixx",publisher:"Nürnberger Spielkarten-Verlag / Pegasus",year:2012,minPlayers:2,maxPlayers:5,duration:15,type:"Würfel",age:8,price:10,desc:"Würfelspiel für alle: Streicht Zahlen in vier farbigen Reihen durch – aber die Reihenfolge muss stimmen! Schnell, mitreißend, funktioniert für 2 bis 5. Spiel des Jahres 2013 Nominierung.",image:"https://www.pegasus.de/media/catalog/product/6/3/63000g_box_right_300dpi_freigestellt.png",shop:"https://www.amazon.de/dp/B00BFCG1DO",played:0,rating:0},
+  {name:"Unter Spannung",publisher:"Kosmos",year:2022,minPlayers:2,maxPlayers:4,duration:30,type:"Kooperativ",age:12,price:25,desc:"Kooperatives Echtzeit-Puzzle: Verbindet Kabel auf eurem Schaltplan bevor die Zeit abläuft. Kommuniziert schnell, denkt klar – sonst gibt's einen Kurzschluss.",image:"https://www.kosmos.de/media/catalog/product/6/8/6830157_3d-packshot_freigestellt.jpg",shop:"https://www.amazon.de/s?k=Unter+Spannung+Kosmos+Spiel",played:0,rating:0},
+  {name:"Noch Mal!",publisher:"Schmidt Spiele",year:2016,minPlayers:1,maxPlayers:6,duration:30,type:"Roll & Write",age:8,price:12,desc:"Streicht farbige Felder auf eurem Bogen durch – aber nur wenn die Farbe UND Zahl der Würfel passt. Einfaches Roll & Write das süchtig macht.",image:"https://www.schmidtspiele.de/files/produkte/4-49340_noch-mal_produktbild.jpg",shop:"https://www.amazon.de/s?k=Noch+Mal+Roll+Write+Schmidt",played:0,rating:0},
+  {name:"Ganz Schön Clever",publisher:"Schmidt Spiele",year:2018,minPlayers:1,maxPlayers:4,duration:30,type:"Würfel",age:8,price:15,desc:"Wählt aus sechs Würfeln klug aus und füllt fünf verschiedene Farbraster aus. Jede Wahl beeinflusst die nächste – tiefes Roll & Write Würfelspiel. Auch solo brillant.",image:"https://www.schmidtspiele.de/files/produkte/4-49340_ganz-schoen-clever_produktbild.jpg",shop:"https://www.amazon.de/dp/B07BGT5BWY",played:0,rating:0},
+  {name:"Cabo",publisher:"Smarts Decor / Pegasus",year:2014,minPlayers:2,maxPlayers:4,duration:30,type:"Karten",age:10,price:15,desc:"Schaut euch eure Karten an, tauscht und merkt euch Werte – wer CABO ruft, beendet die Runde. Wer die niedrigste Summe hat, gewinnt. Schnelles Gedächtnis-Kartenspiel.",image:"https://m.media-amazon.com/images/I/71X2P4HGCYL._AC_SL1500_.jpg",shop:"https://www.amazon.de/s?k=Cabo+Kartenspiel",played:0,rating:0},
+  {name:"Ligretto",publisher:"Schmidt Spiele",year:1988,minPlayers:2,maxPlayers:4,duration:10,type:"Party",age:8,price:10,desc:"Echtzeit-Kartenspiel: Spielt so schnell wie möglich Karten auf gemeinsame Stapel. Wer zuerst sein Ligretto-Deck leer hat, ruft Ligretto. Chaos garantiert.",image:"https://www.schmidtspiele.de/files/produkte/4-01101_ligretto-rot_produktbild.jpg",shop:"https://www.amazon.de/dp/B00005BJOK",played:0,rating:0},
+  {name:"The Mind",publisher:"NSV / Pegasus",year:2018,minPlayers:2,maxPlayers:4,duration:15,type:"Kooperativ",age:8,price:10,desc:"Spielt Karten in aufsteigender Reihenfolge – ohne zu reden, ohne Zeichen. Nur durch kollektives Gefühl und Konzentration. Faszinierend einfaches Kooperativspiel.",image:"https://www.pegasus.de/media/catalog/product/6/3/63112g_box_right_300dpi_freigestellt.png",shop:"https://www.amazon.de/dp/B07BFZWLKF",played:0,rating:0},
+  {name:"Nice Try! – Das Original",publisher:"Huch! Verlag",year:2023,minPlayers:3,maxPlayers:8,duration:30,type:"Party",age:10,price:20,desc:"Stellt Fragen, gebt Antworten – aber nicht die richtige! Wer die meisten Leute mit seiner falschen Antwort täuscht, gewinnt Punkte. Witziges Party-Bluffspiel.",image:"https://m.media-amazon.com/images/I/81rDn9j8CYL._AC_SL1500_.jpg",shop:"https://www.amazon.de/s?k=Nice+Try+Das+Original+Huch",played:0,rating:0},
+  {name:"Sea Salt & Paper",publisher:"Bombyx / Asmodee",year:2022,minPlayers:2,maxPlayers:4,duration:30,type:"Karten",age:8,price:18,desc:"Wunderschönes Origami-Kartenspiel: Sammelt Kartensets aus dem Meer und entscheidet am Ende ob ihr den Punktestand einfriert oder riskiert mehr zu holen.",image:"https://www.asmodee.de/fileadmin/asmodee_products/de/games/sea-salt-paper/BOM01_SeaSaltPaper_3Dbox.jpg",shop:"https://www.amazon.de/s?k=Sea+Salt+Paper+Asmodee",played:0,rating:0},
+  {name:"Maple Valley",publisher:"Pegasus Spiele",year:2024,minPlayers:1,maxPlayers:4,duration:45,type:"Strategie",age:10,price:40,desc:"Kooperatives Legespiel in einem herbstlichen Ahorntal: Platziert Plättchen um Vogelarten anzulocken und die schönste Landschaft zu erschaffen.",image:"https://www.pegasus.de/media/catalog/product/5/1/51250g_box_right_300dpi_freigestellt.png",shop:"https://www.amazon.de/s?k=Maple+Valley+Pegasus",played:0,rating:0},
+  {name:"Agent Avenue",publisher:"Helvetiq",year:2023,minPlayers:2,maxPlayers:5,duration:20,type:"Karten",age:8,price:15,desc:"Legt Agentenkarten in einer Straße aus und aktiviert clevere Kettenreaktionen. Kompaktes Kartenspiel mit überraschender Tiefe und schnellen Runden.",image:"https://helvetiq.com/wp-content/uploads/2023/agent-avenue-box-3d.png",shop:"https://www.amazon.de/s?k=Agent+Avenue+Helvetiq",played:0,rating:0},
+  {name:"Tokaido Duo",publisher:"Funforge / Asmodee",year:2022,minPlayers:2,maxPlayers:2,duration:30,type:"Strategie",age:8,price:25,desc:"2-Spieler-Reise durch das malerische Japan des Tokaido-Weges. Sammelt Erfahrungen, trefft Reisende und genießt die schönsten Panoramen. Elegantes Duell.",image:"https://www.asmodee.de/fileadmin/asmodee_products/de/games/tokaido/TOK06ML_TokaidoDuo_3Dbox.jpg",shop:"https://www.amazon.de/s?k=Tokaido+Duo",played:0,rating:0},
+  {name:"Harmonies",publisher:"Libellud / Asmodee",year:2024,minPlayers:1,maxPlayers:4,duration:30,type:"Strategie",age:10,price:40,desc:"Erschafft harmonische Naturlandschaften durch cleveres Platzieren von farbigen Holzwürfeln und -scheiben. Wunderschönes Legespiel mit entspannender Atmosphäre.",image:"https://www.asmodee.de/fileadmin/asmodee_products/de/games/harmonies/LIB010_Harmonies_3Dbox.jpg",shop:"https://www.amazon.de/s?k=Harmonies+Libellud+Brettspiel",played:0,rating:0},
+  {name:"Kluster",publisher:"Kluster Games",year:2020,minPlayers:1,maxPlayers:4,duration:15,type:"Party",age:8,price:22,desc:"Legt magnetische Steine in einem Seiloval ab – wer einen Stein anzieht oder angezogen wird, sammelt ihn ein. Wer zuerst alle Steine loswird, gewinnt.",image:"https://m.media-amazon.com/images/I/71-XnezMrRL._AC_SL1500_.jpg",shop:"https://www.amazon.de/dp/B08CXSDKRZ",played:0,rating:0},
+  {name:"Phase 10 Masters Classic",publisher:"Ravensburger / Mattel",year:1982,minPlayers:2,maxPlayers:6,duration:60,type:"Karten",age:7,price:12,desc:"Schließt zehn verschiedene Phasen aus Kartensets und -sequenzen ab – wer zuerst alle zehn schafft, gewinnt. Klassiker der Familienkartenspiele.",image:"https://m.media-amazon.com/images/I/71yJoIiuzsL._AC_SL1500_.jpg",shop:"https://www.amazon.de/s?k=Phase+10+Masters+Classic",played:0,rating:0},
+  {name:"Everdell Duo",publisher:"Starling Games / Pegasus",year:2024,minPlayers:2,maxPlayers:2,duration:45,type:"Strategie",age:10,price:30,desc:"2-Spieler-Version des preisgekrönten Everdell: Baut in den Jahreszeiten euer Wäldchenstädtchen mit Critter- und Gebäudekarten. Wunderschöne Holzfiguren inklusive.",image:"https://www.pegasus.de/media/catalog/product/5/1/51252g_box_right_300dpi_freigestellt.png",shop:"https://www.amazon.de/s?k=Everdell+Duo+Pegasus",played:0,rating:0},
 ];
 
 // ── STATE ───────────────────────────────────────────────
@@ -645,11 +693,90 @@ function setupEvents(){
   document.getElementById('sortSelect').onchange=e=>{sortBy=e.target.value;render()};
   document.getElementById('searchInput').oninput=e=>{filters.search=e.target.value;render()};
   initImgPicker();
+  document.getElementById('btnExport').onclick = exportGames;
+  document.getElementById('btnImport').onclick = () => document.getElementById('importFile').click();
+  document.getElementById('importFile').onchange = e => {
+    const f = e.target.files[0];
+    if(f){ importGames(f); e.target.value=''; }
+  };
+  // Options menu
+  const optBtn = document.getElementById('btnOptions');
+  const optMenu = document.getElementById('optionsMenu');
+  optBtn.onclick = e => {
+    e.stopPropagation();
+    const isOpen = optMenu.classList.contains('open');
+    optMenu.classList.toggle('open', !isOpen);
+    optBtn.classList.toggle('open', !isOpen);
+  };
+  document.addEventListener('click', () => {
+    optMenu.classList.remove('open');
+    optBtn.classList.remove('open');
+  });
+  optMenu.addEventListener('click', () => {
+    optMenu.classList.remove('open');
+    optBtn.classList.remove('open');
+  });
+
   document.getElementById('viewToggle').onclick=()=>{viewMode=viewMode==='grid'?'list':'grid';document.getElementById('grid').classList.toggle('list-view',viewMode==='list');document.getElementById('viewToggle').textContent=viewMode==='list'?'⊟':'⊞'};
 }
 
 let toastTimer;
 function toast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('show'),2500)}
+
+
+// ── IMPORT / EXPORT ────────────────────────────────────────
+function exportGames(){
+  const data = {
+    version: 1,
+    exported: new Date().toISOString(),
+    games: games
+  };
+  const json = JSON.stringify(data, null, 2);
+  const blob = new Blob([json], {type: 'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  const date = new Date().toISOString().slice(0,10);
+  a.href = url;
+  a.download = `spielregal-backup-${date}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+  toast(`✓ ${games.length} Spiele exportiert`);
+}
+
+async function importGames(file){
+  try {
+    const text = await file.text();
+    const data = JSON.parse(text);
+    // Support both plain array and wrapped {version, games:[]}
+    const incoming = Array.isArray(data) ? data : (data.games || []);
+    if(!incoming.length) { toast('⚠ Keine Spiele in der Datei gefunden'); return; }
+
+    const existingNames = new Set(games.map(g => g.name.toLowerCase().trim()));
+    let added = 0, updated = 0;
+
+    for(const g of incoming){
+      if(!g.name) continue;
+      delete g.id; // let IndexedDB assign new id to avoid conflicts
+      const existing = games.find(x => x.name.toLowerCase().trim() === g.name.toLowerCase().trim());
+      if(existing){
+        // Merge: keep higher played count and rating, update rest
+        g.id = existing.id;
+        g.played = Math.max(g.played||0, existing.played||0);
+        g.rating = g.rating || existing.rating;
+        await putGame(g);
+        updated++;
+      } else {
+        await putGame(g);
+        added++;
+      }
+    }
+    games = await getAll();
+    render();
+    toast(`✓ Import: ${added} neu, ${updated} aktualisiert`);
+  } catch(e) {
+    toast('⚠ Fehler beim Import: ' + e.message);
+  }
+}
 
 init().catch(err=>{document.getElementById('spinner').style.display='none';document.getElementById('grid').innerHTML=`<p style="color:var(--text3);padding:40px">Fehler: ${err.message}</p>`;document.getElementById('grid').style.display='block'});
 </script>
